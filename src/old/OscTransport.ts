@@ -138,7 +138,7 @@ export class OscTransport {
         if (event.decoded.address === params.address) {
           params.callBack(event);
         }
-      }
+      },
     );
   }
 
@@ -156,7 +156,7 @@ export class OscTransport {
           cleanUp();
           params.callBack(event);
         }
-      }
+      },
     );
     return cleanUp;
   }
@@ -191,10 +191,10 @@ export class OscTransport {
             new Failure({
               message: `Too slow to reply on ${params.address}`,
               type: "wait-timeout",
-            })
+            }),
           );
         });
-      }
+      },
     );
 
     return resolver;

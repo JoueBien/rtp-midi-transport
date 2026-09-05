@@ -29,7 +29,7 @@ describe("yes", () => {
           {
             i: 100,
           },
-        ])
+        ]),
 
         // Buffer.concat([
         //   // stringToPaddedBuffer("/xinfo"),

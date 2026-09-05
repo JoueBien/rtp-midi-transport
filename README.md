@@ -1,6 +1,6 @@
 # @joue-bien/rtp-midi-transport
 
-A typescript library for sending Midi Messages over UDP - in compliance with Apples RTP implmentation. This library does not implement Bonjour or Journal error correction support.
+A typescript library for sending Midi Messages over UDP without a driver - in compliance with Apples RTP implmentation. This library does not implement Bonjour or Journal error correction support.
 
 # Further reading
 
@@ -16,8 +16,4 @@ A typescript library for sending Midi Messages over UDP - in compliance with App
 
 # Documintation
 
-Documintation can be found on the projects [GitHub Wiki](https://github.com/JoueBien/rtp-midi-transport/wiki).
-
-## Table of contence
-
-TODO
+Documintation can be found on the projects [GitHub Wiki](https://github.com/JoueBien/rtp-midi-transport/wiki)
