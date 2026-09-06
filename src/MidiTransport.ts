@@ -12,10 +12,15 @@ import {
   Command,
   DecodedMidiTransportMessage,
   MidiTransportEvent,
+  MidiTransportMessageParams,
   MidiTransportMessageSendParams,
 } from "./types";
 import { MidiTransportMessage } from "./MidiTransportMessage";
 import { EMIT_ERROR, EMIT_MESSAGE } from "./constrains/message";
+import { ExatlyOneKeyValue } from "./types/ExatlyOneKeyValueSet";
+import { checkCommandCanBeOnBothPorts } from "./utils/checkCommandCanBeOnBothPorts";
+import { checkCommand } from "./old/MidiSessionMessage";
+import { checkDecodeCommand } from "./utils/checkDecodeCommand";
 
 export class MidiTransport {
   controlClient: UdpTransport;
@@ -91,7 +96,7 @@ export class MidiTransport {
     // Send First Clock Sync.
     if (okayCheckRes === "ok") {
       this.send({
-        clock: {
+        CK: {
           header: "CK",
           count: 1,
           ssrc: this.ssrc,
@@ -147,20 +152,18 @@ export class MidiTransport {
   }
 
   /** Add a listener to listen for a messages with an address. */
+  // MidiTransportEvent BANJG!!!!!!!
   onMessage(params: {
-    command: Command | AppleMIDICommand;
-    callBack: (event: DecodedMidiTransportMessage) => void;
+    command: Command | "midi";
+    callBack: (event: MidiTransportEvent) => void;
   }) {
     return this.eventEmitter.listen(
       EMIT_MESSAGE,
-      (event: DecodedMidiTransportMessage) => {
-        if ("control" in event && event.control.header === params.command) {
-          return params.callBack(event);
-        }
-        if ("clock" in event && event.clock.header === params.command) {
-          return params.callBack(event);
-        }
-        if ("midi" in event && event.midi.header === params.command) {
+      (event: MidiTransportEvent) => {
+        const { decoded } = event;
+
+        const isCommand = checkDecodeCommand(Object.keys(decoded)[0]);
+        if (isCommand === params.command) {
           return params.callBack(event);
         }
       },
@@ -169,21 +172,16 @@ export class MidiTransport {
 
   /** Add a listener to listen for a message with an address once.*/
   onOnceMessage(params: {
-    command: Command | AppleMIDICommand;
-    callBack: (event: DecodedMidiTransportMessage) => void;
+    command: Command | "midi";
+    callBack: (event: MidiTransportEvent) => void;
   }) {
     const cleanUp = this.eventEmitter.listen(
       EMIT_MESSAGE,
-      (event: DecodedMidiTransportMessage) => {
-        if ("control" in event && event.control.header === params.command) {
-          cleanUp();
-          return params.callBack(event);
-        }
-        if ("clock" in event && event.clock.header === params.command) {
-          cleanUp();
-          return params.callBack(event);
-        }
-        if ("midi" in event && event.midi.header === params.command) {
+      (event: MidiTransportEvent) => {
+        const { decoded } = event;
+
+        const isCommand = checkDecodeCommand(Object.keys(decoded)[0]);
+        if (isCommand === params.command) {
           cleanUp();
           return params.callBack(event);
         }
@@ -197,45 +195,48 @@ export class MidiTransport {
    * Will return an error if does not get a message within 500 milliseconds.
    */
   async waitForMessage(params: {
-    command: Command | AppleMIDICommand;
+    command: Command | "midi";
     /** @defaults to `500`. */
     exitMs?: number;
-  }): Promise<Result<DecodedMidiTransportMessage, "wait-timeout">> {
-    const resolver = new Promise<
-      Result<DecodedMidiTransportMessage, "wait-timeout">
-    >((resolve) => {
-      const delayController = new AbortController();
+  }): Promise<Result<MidiTransportEvent, "wait-timeout">> {
+    const resolver = new Promise<Result<MidiTransportEvent, "wait-timeout">>(
+      (resolve) => {
+        const delayController = new AbortController();
 
-      const cleanUp = this.onOnceMessage({
-        command: params.command,
-        callBack: (event: DecodedMidiTransportMessage) => {
-          delayController.abort();
-          resolve(event);
-        },
-      });
+        const cleanUp = this.onOnceMessage({
+          command: params.command,
+          callBack: (event: MidiTransportEvent) => {
+            delayController.abort();
+            resolve(event);
+          },
+        });
 
-      delay({
-        ms: params.exitMs || 500,
-        cancelOnController: delayController,
-      }).then(() => {
-        cleanUp();
-        resolve(
-          new Failure({
-            message: `Too slow to reply on ${params.command}`,
-            type: "wait-timeout",
-          }),
-        );
-      });
-    });
+        delay({
+          ms: params.exitMs || 500,
+          cancelOnController: delayController,
+        }).then(() => {
+          cleanUp();
+          resolve(
+            new Failure({
+              message: `Too slow to reply on ${params.command}`,
+              type: "wait-timeout",
+            }),
+          );
+        });
+      },
+    );
 
     return resolver;
   }
 
   /** Send and wait for a message. */
   async sendAndWaitForMessage(params: {
-    send: MidiTransportMessageSendParams;
+    send: ExatlyOneKeyValue<
+      keyof MidiTransportMessageParams,
+      MidiTransportMessageParams
+    >;
     listen: {
-      command: Command | AppleMIDICommand;
+      command: Command | "midi";
       exitMs?: number;
     };
   }) {
@@ -278,22 +279,39 @@ export class MidiTransport {
   }
 
   /** Send a message. */
-  async send(params: MidiTransportMessageSendParams) {
+  async send(
+    params: ExatlyOneKeyValue<
+      keyof MidiTransportMessageParams,
+      MidiTransportMessageParams
+    >,
+  ) {
     const messageBuffer = MidiTransportMessage.encode(params);
 
-    if ("control" in params && params.control.on === "control") {
+    const commandKeyForEither = checkCommandCanBeOnBothPorts(
+      Object.keys(params)[0],
+    );
+
+    if (
+      commandKeyForEither &&
+      params[commandKeyForEither] &&
+      params[commandKeyForEither].on === "control"
+    ) {
       return this.controlClient.send(messageBuffer);
     }
 
-    if ("control" in params && params.control.on === "message") {
+    if (
+      commandKeyForEither &&
+      params[commandKeyForEither] &&
+      params[commandKeyForEither].on === "message"
+    ) {
       return this.messageClient.send(messageBuffer);
     }
 
-    if ("clock" in params) {
+    if (params.CK) {
       return this.messageClient.send(messageBuffer);
     }
 
-    if ("midi" in params) {
+    if (params.midi) {
       return this.messageClient.send(messageBuffer);
     }
 
@@ -305,7 +323,10 @@ export class MidiTransport {
 
   /** Respond with a message. */
   async respond(
-    params: MidiTransportMessageSendParams & {
+    params: ExatlyOneKeyValue<
+      keyof MidiTransportMessageParams,
+      MidiTransportMessageParams
+    > & {
       remotePort: number;
       remoteAddress: string;
     },
@@ -314,7 +335,15 @@ export class MidiTransport {
 
     const messageBuffer = MidiTransportMessage.encode(restParams);
 
-    if ("control" in params && params.control.on === "message") {
+    const commandKeyForEither = checkCommandCanBeOnBothPorts(
+      Object.keys(params)[0],
+    );
+
+    if (
+      commandKeyForEither &&
+      params[commandKeyForEither] &&
+      params[commandKeyForEither].on === "control"
+    ) {
       return this.controlClient.respond({
         msg: messageBuffer,
         remoteAddress,
@@ -322,7 +351,11 @@ export class MidiTransport {
       });
     }
 
-    if ("control" in params && params.control.on === "message") {
+    if (
+      commandKeyForEither &&
+      params[commandKeyForEither] &&
+      params[commandKeyForEither].on === "message"
+    ) {
       return this.messageClient.respond({
         msg: messageBuffer,
         remoteAddress,
@@ -390,21 +423,21 @@ function connectAddListnersForClockSync(transport: MidiTransport) {
   const cleanUp = transport.onMessage({
     command: "CK",
     callBack: (event) => {
-      if ("clock" in event) {
-        const { clock } = event;
-        const { count, timestamps } = clock;
+      if (event.decoded.CK) {
+        const { CK } = event.decoded;
+        const { count, timestamps } = CK;
         if (count === 1 && timestamps[0]) {
           transport.send({
-            clock: {
-              ...clock,
+            CK: {
+              ...CK,
               timestamps: [timestamps[0], timestamp.nowRTP()],
             },
           });
         }
         if (count === 2 && timestamps[1]) {
           transport.send({
-            clock: {
-              ...clock,
+            CK: {
+              ...CK,
               timestamps: [timestamps[0], timestamps[1], timestamp.nowRTP()],
             },
           });
@@ -425,7 +458,7 @@ async function connectOkCheck(transport: MidiTransport) {
     }),
     transport.sendAndWaitForMessage({
       send: {
-        control: {
+        IN: {
           on: "control",
           header: "IN",
           ssrc: transport.ssrc,
@@ -452,7 +485,7 @@ async function connectOkCheck(transport: MidiTransport) {
       }),
       transport.sendAndWaitForMessage({
         send: {
-          control: {
+          IN: {
             on: "control",
             header: "IN",
             ssrc: transport.ssrc,

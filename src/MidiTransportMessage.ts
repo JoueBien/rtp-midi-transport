@@ -4,37 +4,65 @@ import {
   AppleMIDICommand,
   MidiTransportMessageParams,
   DecodedMidiTransportMessage,
+  DecodedMidiTransportMessage2,
 } from "./types";
 import { decodeAndPopRtpControl } from "./decoders/decodeAndPopRtpControl";
 import { decodeAndPopRtpClock } from "./decoders/decodeAndPopRtpClock";
 import { encodeRtpHeader } from "./encode/encodeRtpHeader";
 import { encodRtpControl } from "./encode/encodRtpControl";
 import { encodeRtpClock } from "./encode/encodeRtpClock";
+import { ExatlyOneKeyValue } from "./types/ExatlyOneKeyValueSet";
 
-const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
-  "OK",
-  "IN",
-  "BY",
-  "NO",
-];
+const CONTROL_ONLY_COMMAND = ["OK", "IN", "BY", "NO"];
 
 export const MidiTransportMessage = {
-  encode: function encode(params: MidiTransportMessageParams) {
+  encode: function encode(
+    params: ExatlyOneKeyValue<
+      keyof MidiTransportMessageParams,
+      MidiTransportMessageParams
+    >,
+  ) {
     // Encode Midi TODO:
 
-    if ("clock" in params) {
-      const { clock } = params;
+    // Encode Clock
+    if (params.CK) {
+      const { CK } = params;
       return new Uint8Array([
-        ...encodeRtpHeader({ command: clock.header }),
-        ...encodeRtpClock(params.clock),
+        ...encodeRtpHeader({ command: CK.header }),
+        ...encodeRtpClock(params.CK),
       ]);
     }
 
-    if ("control" in params) {
-      const { control } = params;
+    // Encode Params
+    if (params.OK) {
+      const { OK } = params;
       return new Uint8Array([
-        ...encodeRtpHeader({ command: control.header }),
-        ...encodRtpControl(params.control),
+        ...encodeRtpHeader({ command: OK.header }),
+        ...encodRtpControl(params.OK),
+      ]);
+    }
+
+    if (params.IN) {
+      const { IN } = params;
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: IN.header }),
+        ...encodRtpControl(params.IN),
+      ]);
+    }
+
+    if (params.NO) {
+      const { NO } = params;
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: NO.header }),
+        ...encodRtpControl(params.NO),
+      ]);
+    }
+
+    if (params.BY) {
+      const { BY } = params;
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: BY.header }),
+        ...encodRtpControl(params.BY),
       ]);
     }
 
@@ -42,9 +70,16 @@ export const MidiTransportMessage = {
     return new Uint8Array(0);
   },
 
+  // ExatlyOneKeyValue<
+  //     keyof MidiTransportMessageParams,
+  //     MidiTransportMessageParams
+
   decode: function decode(
     messageBuffer: Uint8Array<ArrayBuffer>,
-  ): DecodedMidiTransportMessage {
+  ): ExatlyOneKeyValue<
+    keyof DecodedMidiTransportMessage2,
+    DecodedMidiTransportMessage2
+  > {
     // Decode RTP header at start of message
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
@@ -55,7 +90,7 @@ export const MidiTransportMessage = {
     if (command === "CK") {
       const clock = decodeAndPopRtpClock(unit8Array1);
       return {
-        clock: {
+        CK: {
           header: "CK",
           ...clock,
         },
@@ -63,11 +98,40 @@ export const MidiTransportMessage = {
     }
 
     // Decode Commands
-    if (CONTROL_ONLY_COMMAND.includes(command)) {
+    if (command === "OK") {
       const about = decodeAndPopRtpControl(unit8Array1);
       return {
-        control: {
-          header: command as "IN" | "OK" | "NO" | "BY",
+        ["OK"]: {
+          header: command,
+          ...about,
+        },
+      };
+    }
+    if (command === "IN") {
+      const about = decodeAndPopRtpControl(unit8Array1);
+      return {
+        ["IN"]: {
+          header: command,
+          ...about,
+        },
+      };
+    }
+
+    if (command === "NO") {
+      const about = decodeAndPopRtpControl(unit8Array1);
+      return {
+        ["NO"]: {
+          header: command,
+          ...about,
+        },
+      };
+    }
+
+    if (command === "BY") {
+      const about = decodeAndPopRtpControl(unit8Array1);
+      return {
+        ["BY"]: {
+          header: command,
           ...about,
         },
       };
@@ -75,7 +139,7 @@ export const MidiTransportMessage = {
 
     // On We got a bad header return a fallback message.
     return {
-      fallback: {
+      FB: {
         header: "FB",
         uint8Array: messageBuffer,
       },
