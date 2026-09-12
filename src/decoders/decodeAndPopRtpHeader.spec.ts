@@ -18,12 +18,12 @@ describe("decodeAndPopRtpHeader", () => {
   it("decodes an Apple Midi Header", () => {
     const res = decodeAndPopRtpHeader(
       encodeRtpHeader({
-        command: "AppleMIDI",
+        command: "midi",
       }),
     );
 
     expect(res).toMatchObject({
-      command: "AppleMIDI",
+      command: "midi",
       unit8Array: expect.any(Uint8Array),
     });
   });

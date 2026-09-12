@@ -4,6 +4,7 @@ import {
   AppleMIDICommand,
   MidiTransportMessageParams,
   DecodedMidiTransportMessage,
+  castMidiTransportMessageParamsTo,
 } from "./types";
 import { decodeAndPopRtpControl } from "./decoders/decodeAndPopRtpControl";
 import { decodeAndPopRtpClock } from "./decoders/decodeAndPopRtpClock";
@@ -19,22 +20,50 @@ const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
 ];
 
 export const MidiTransportMessage = {
-  encode: function encode(params: MidiTransportMessageParams) {
+  encode: function encode<T extends keyof MidiTransportMessageParams>(
+    params: Pick<MidiTransportMessageParams, T>,
+  ) {
     // Encode Midi TODO:
 
-    if ("clock" in params) {
-      const { clock } = params;
+    // params.CK
+    if ("CK" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "CK">(params);
       return new Uint8Array([
-        ...encodeRtpHeader({ command: clock.header }),
-        ...encodeRtpClock(params.clock),
+        ...encodeRtpHeader({ command: "CK" }),
+        ...encodeRtpClock(command.CK),
       ]);
     }
 
-    if ("control" in params) {
-      const { control } = params;
+    // Commands
+    if ("IN" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "IN">(params);
       return new Uint8Array([
-        ...encodeRtpHeader({ command: control.header }),
-        ...encodRtpControl(params.control),
+        ...encodeRtpHeader({ command: "IN" }),
+        ...encodRtpControl(command.IN),
+      ]);
+    }
+
+    if ("OK" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "OK">(params);
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: "OK" }),
+        ...encodRtpControl(command.OK),
+      ]);
+    }
+
+    if ("NO" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "NO">(params);
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: "NO" }),
+        ...encodRtpControl(command.NO),
+      ]);
+    }
+
+    if ("BY" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "BY">(params);
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: "BY" }),
+        ...encodRtpControl(command.BY),
       ]);
     }
 
@@ -44,7 +73,7 @@ export const MidiTransportMessage = {
 
   decode: function decode(
     messageBuffer: Uint8Array<ArrayBuffer>,
-  ): DecodedMidiTransportMessage {
+  ): Partial<DecodedMidiTransportMessage> {
     // Decode RTP header at start of message
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
@@ -55,7 +84,7 @@ export const MidiTransportMessage = {
     if (command === "CK") {
       const clock = decodeAndPopRtpClock(unit8Array1);
       return {
-        clock: {
+        CK: {
           header: "CK",
           ...clock,
         },
@@ -66,8 +95,8 @@ export const MidiTransportMessage = {
     if (CONTROL_ONLY_COMMAND.includes(command)) {
       const about = decodeAndPopRtpControl(unit8Array1);
       return {
-        control: {
-          header: command as "IN" | "OK" | "NO" | "BY",
+        [command]: {
+          header: command,
           ...about,
         },
       };
@@ -75,7 +104,7 @@ export const MidiTransportMessage = {
 
     // On We got a bad header return a fallback message.
     return {
-      fallback: {
+      FB: {
         header: "FB",
         uint8Array: messageBuffer,
       },

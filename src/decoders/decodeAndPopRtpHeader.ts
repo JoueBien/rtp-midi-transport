@@ -25,7 +25,7 @@ export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {
   ) {
     console.log("@@@MIDI?");
     return {
-      command: "AppleMIDI",
+      command: "midi",
       unit8Array,
     };
   }

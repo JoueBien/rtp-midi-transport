@@ -6,7 +6,7 @@ describe("MidiTransportMessage", () => {
   it("encodes and decodes commnds", () => {
     const res = MidiTransportMessage.decode(
       MidiTransportMessage.encode({
-        control: {
+        BY: {
           header: "BY",
           name: "Test Touch",
           ssrc: 123123123,
@@ -17,7 +17,7 @@ describe("MidiTransportMessage", () => {
     );
 
     expect(res).toMatchObject({
-      control: {
+      BY: {
         header: "BY",
         name: "Test Touch",
         ssrc: 123123123,
@@ -43,7 +43,7 @@ describe("MidiTransportMessage", () => {
     );
 
     expect(res).toMatchObject({
-      control: {
+      BY: {
         header: "BY",
         name: "",
         ssrc: 123123123,
@@ -58,7 +58,7 @@ describe("MidiTransportMessage", () => {
     const now = timestamp.nowRTP();
     const res = MidiTransportMessage.decode(
       MidiTransportMessage.encode({
-        clock: {
+        CK: {
           header: "CK",
           count: 1,
           ssrc: 123123123,
@@ -68,7 +68,7 @@ describe("MidiTransportMessage", () => {
     );
 
     expect(res).toMatchObject({
-      clock: {
+      CK: {
         header: "CK",
         count: 1,
         ssrc: 123123123,
