@@ -1,13 +1,17 @@
-import { Failure } from "fail-up";
 import { MidiTransport } from "./MidiTransport";
-import {
-  DecodedMidiTransportMessage,
-  MidiTransportUnknownEvent,
-} from "./types";
-import { delay } from "@joue-bien/audio-transport";
+import { MidiTransportUnknownEvent } from "./types";
+import { setUpFakeTimers } from "./utils/setUpFakeTimers";
+import { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
 
 describe("MidiTransport", () => {
-  it("Connects and runs through okay check", async () => {
+  setUpFakeTimers({
+    fake: ["fake", "Date", "performance"],
+  });
+
+  it("Connects and runs through okay check and clocks", async () => {
+    const serverOnSpy = vi.fn();
+    const clientOnSpy = vi.fn();
+
     const cleanUpController = new AbortController();
 
     const server = new MidiTransport({
@@ -35,98 +39,71 @@ describe("MidiTransport", () => {
     });
 
     server.onAnyMessage((event: MidiTransportUnknownEvent) => {
-      if (event.decoded.CK) {
-        console.log(
-          "@@@server CK",
-          event.decoded.CK,
-          event.decoded.CK.timestamps,
-        );
-      } else {
-        // console.log("@@@server", JSON.stringify(event, null, 2));
-      }
+      serverOnSpy(event);
     });
 
     client.onAnyMessage((event: MidiTransportUnknownEvent) => {
-      if (event.decoded.CK) {
-        console.log(
-          "@@@client CK",
-          event.decoded.CK,
-          event.decoded.CK.timestamps,
-        );
-      } else {
-        // console.log("@@@client", JSON.stringify(event, null, 2));
-      }
+      clientOnSpy(event);
     });
 
-    server.onMessage({
-      command: "IN",
-      callBack: async (event) => {
-        //  Auto Reply as OK
-        const res = await server.respond({
-          msg: {
-            OK: {
-              on: event.on,
-              header: "OK",
-              version: 2,
-              token: event.decoded.IN.token,
-              ssrc: server.ssrc,
-              name: server.hardwareName,
-            },
-          },
-          to: {
-            remoteAddress: event.rinfo.address,
-            remotePort: event.rinfo.port,
-          },
-        });
-      },
-    });
-
+    // Set up auto Reply as OK and start server.
+    listenAddListnersForAutoOK(server);
     await server.listen();
 
+    // Connect to client to server and finish connection handshake.
     const floatingClientOkay = await client.connect();
-    console.log("@@@client ok", floatingClientOkay);
+    expect(floatingClientOkay).toMatchObject(expect.any(AbortController));
 
-    const floatingClockFirst = server.waitForMessage({
-      command: "CK",
-      exitMs: 1000,
+    // Expect Server to get clock with one value
+    await vi.waitFor(() => {
+      expect(serverOnSpy).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          decoded: expect.objectContaining({
+            CK: expect.objectContaining({
+              header: "CK",
+              timestamps: [expect.any(BigInt)],
+            }),
+          }),
+        }),
+      );
     });
 
-    const firstClockOnServer = await floatingClockFirst;
-
-    console.log("@@@@floatingClockFirst", firstClockOnServer);
-
-    await delay({
-      ms: 2000,
+    // Expect Client to get clock with one value
+    await vi.waitFor(() => {
+      expect(clientOnSpy).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          decoded: expect.objectContaining({
+            CK: expect.objectContaining({
+              header: "CK",
+              timestamps: [expect.any(BigInt), expect.any(BigInt)],
+            }),
+          }),
+        }),
+      );
     });
 
-    // const floatingClockSecond = server.waitForMessage({
-    //   command: "CK",
-    // });
+    // Expect Server to get clock with three value
+    await vi.waitFor(() => {
+      expect(serverOnSpy).toHaveBeenNthCalledWith(
+        4,
+        expect.objectContaining({
+          decoded: expect.objectContaining({
+            CK: expect.objectContaining({
+              header: "CK",
+              timestamps: [
+                expect.any(BigInt),
+                expect.any(BigInt),
+                expect.any(BigInt),
+              ],
+            }),
+          }),
+        }),
+      );
+    });
 
-    // const finalClock = await floatingClockSecond;
-    // if (finalClock instanceof Failure === false) {
-    //   console.log(
-    //     "@@@@floatingClockSecond",
-    //     finalClock,
-    //     finalClock.decoded.CK.timestamps,
-    //   );
-    // }
-
-    // const askRes = (await floatingServerAsk) as DecodedMidiTransportMessage;
-
-    // const clientOk = await floatingClientOkay;
-
-    // console.log("@@@clientOk", askRes, clientOk);
-
-    // server.respond({
-    //   control: "OK",
-    //   remotePort: askRes.
-    // })
-
-    // await floatingClockFirst;
-
+    // Clean Up
     cleanUpController.abort();
   });
 });
-
-// function u

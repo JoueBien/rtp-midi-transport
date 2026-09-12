@@ -5,7 +5,7 @@ import {
 } from "@joue-bien/audio-transport";
 import { APPLE_MIDI_HEADER, RTP_HEADER_PADDING } from "./../constrains/headers";
 import { AppleMIDICommand, Command } from "./../types";
-import { checkCommand } from "../old/MidiSessionMessage";
+import { checkCommand } from "../utils/checkCommand";
 
 /** Using the first 4 bytes check the packet header for what it contains. */
 export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {

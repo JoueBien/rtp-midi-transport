@@ -4,13 +4,13 @@ import {
   AppleMIDICommand,
   MidiTransportMessageParams,
   DecodedMidiTransportMessage,
-  castMidiTransportMessageParamsTo,
 } from "./types";
 import { decodeAndPopRtpControl } from "./decoders/decodeAndPopRtpControl";
 import { decodeAndPopRtpClock } from "./decoders/decodeAndPopRtpClock";
 import { encodeRtpHeader } from "./encode/encodeRtpHeader";
 import { encodRtpControl } from "./encode/encodRtpControl";
 import { encodeRtpClock } from "./encode/encodeRtpClock";
+import { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",

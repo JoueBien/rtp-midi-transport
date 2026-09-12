@@ -8,10 +8,6 @@ import {
 import { RemoteInfo } from "dgram";
 import { Failure, Result } from "fail-up";
 import {
-  AppleMIDICommand,
-  castMidiTransportMessageParamsTo,
-  castMidiTransportMessageSendParamsTo,
-  Command,
   DecodedMidiTransportMessage,
   MidiTransportEvent,
   MidiTransportMessageSendParams,
@@ -19,6 +15,7 @@ import {
 } from "./types";
 import { MidiTransportMessage } from "./MidiTransportMessage";
 import { EMIT_ERROR, EMIT_MESSAGE } from "./constrains/message";
+import { castMidiTransportMessageSendParamsTo } from "./utils/cast/castMidiTransportMessageSendParamsTo";
 
 export class MidiTransport {
   controlClient: UdpTransport;
@@ -92,9 +89,7 @@ export class MidiTransport {
     const okayCheckRes = await connectOkCheck(this);
 
     // Send First Clock Sync.
-    // console.log("@@@okayCheckRes", okayCheckRes);
     if (okayCheckRes === "ok") {
-      console.log("@@@ client sent clock!");
       this.send({
         CK: {
           header: "CK",
@@ -174,7 +169,6 @@ export class MidiTransport {
     const cleanUp = this.eventEmitter.listen(
       EMIT_MESSAGE,
       (event: MidiTransportEvent<T>) => {
-        console.log("@@@Clock?", Object.keys(event.decoded));
         if (params.command in event.decoded) {
           cleanUp();
           return params.callBack(event);
