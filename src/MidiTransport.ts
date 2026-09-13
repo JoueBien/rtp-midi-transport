@@ -425,7 +425,7 @@ function addBaseHandlers(transport: MidiTransport) {
   transport.controlClient.onMessage((msg: Buffer, rinfo: RemoteInfo) => {
     const data: MidiTransportUnknownEvent = {
       msg,
-      decoded: MidiTransportMessage.decode(Uint8Array.from(msg)),
+      decoded: MidiTransportMessage.decode(new Uint8Array(msg)),
       on: "control",
       rinfo,
     };
@@ -439,7 +439,7 @@ function addBaseHandlers(transport: MidiTransport) {
   transport.messageClient.onMessage((msg: Buffer, rinfo: RemoteInfo) => {
     const data: MidiTransportUnknownEvent = {
       msg,
-      decoded: MidiTransportMessage.decode(Uint8Array.from(msg)),
+      decoded: MidiTransportMessage.decode(new Uint8Array(msg)),
       on: "message",
       rinfo,
     };
