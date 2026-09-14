@@ -37,8 +37,13 @@ export function setUpFakeTimers(params?: {
     vi.useRealTimers();
   });
 
+  vi.advanceTimersByTime;
   return {
     setSystemTime: vi.setSystemTime,
+    advanceTimersByTime: vi.advanceTimersByTime,
+    advanceTimersByTimeAsync: vi.advanceTimersByTimeAsync,
+    runOnlyPendingTimers: vi.runOnlyPendingTimers,
+    runOnlyPendingTimersAsync: vi.runOnlyPendingTimersAsync,
     now: vi.getMockedSystemTime() || new Date(),
   };
 }

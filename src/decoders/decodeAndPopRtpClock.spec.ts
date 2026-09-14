@@ -20,7 +20,7 @@ describe("decodeAndPopRtpClock", () => {
 
     expect(res).toMatchObject({
       ssrc: 1312312332,
-      count: 3,
+      count: 2,
       timestamps: times,
       unit8Array: expect.any(Uint8Array),
     });
@@ -38,7 +38,7 @@ describe("decodeAndPopRtpClock", () => {
 
     expect(res).toMatchObject({
       ssrc: 1312312332,
-      count: 1,
+      count: 0,
       timestamps: times,
       unit8Array: expect.any(Uint8Array),
     });

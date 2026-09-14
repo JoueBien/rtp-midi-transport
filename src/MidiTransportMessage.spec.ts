@@ -60,7 +60,7 @@ describe("MidiTransportMessage", () => {
       MidiTransportMessage.encode({
         CK: {
           header: "CK",
-          count: 1,
+          count: 0,
           ssrc: 123123123,
           timestamps: [now],
         },
@@ -70,7 +70,7 @@ describe("MidiTransportMessage", () => {
     expect(res).toMatchObject({
       CK: {
         header: "CK",
-        count: 1,
+        count: 0,
         ssrc: 123123123,
         timestamps: [now],
         unit8Array: expect.any(Uint8Array),

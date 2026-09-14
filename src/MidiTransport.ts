@@ -85,20 +85,23 @@ export class MidiTransport {
     // Make sure to reply to Clock Requests.
     connectAddListnersForClockSync(this);
 
+    // Ensure we remain connected by continuing to share clock pulses.
+    // addClockPulse(this);
+
     // Run OK Check procedure.
     const okayCheckRes = await connectOkCheck(this);
 
-    // Send First Clock Sync.
-    if (okayCheckRes === "ok") {
-      this.send({
-        CK: {
-          header: "CK",
-          count: 1,
-          ssrc: this.ssrc,
-          timestamps: [timestamp.nowRTP()],
-        },
-      });
-    }
+    // // Send First Clock Sync.
+    // if (okayCheckRes === "ok") {
+    //   this.send({
+    //     CK: {
+    //       header: "CK",
+    //       count: 0,
+    //       ssrc: this.ssrc,
+    //       timestamps: [timestamp.nowRTP()],
+    //     },
+    //   });
+    // }
 
     return okayCheckRes === "ok" ? this.cleanUpController : okayCheckRes;
   }
@@ -271,6 +274,7 @@ export class MidiTransport {
     msg: Pick<MidiTransportMessageSendParams, T>,
   ) {
     const messageBuffer = MidiTransportMessage.encode(msg);
+    console.log("@@@SEND->", Object.keys(msg)[0], messageBuffer);
 
     if ("midi" in msg) {
       return this.messageClient.send(messageBuffer);
@@ -419,6 +423,35 @@ export class MidiTransport {
   }
 }
 
+/** Adds a recurring clock event sender to keep the connection alive.
+ * The clock event must be sent at least once eveery 60 seconds.
+ * To make sure we stay connected we run it every 50 seconds. */
+function addClockPulse(transport: MidiTransport) {
+  const ptr = setInterval(async () => {
+    if ((await transport.isConnectionOk()) === "ok") {
+      transport.send({
+        CK: {
+          header: "CK",
+          count: 0,
+          ssrc: transport.ssrc,
+          timestamps: [timestamp.nowRTP()],
+        },
+      });
+    }
+  }, 10 * 10000);
+
+  // Clean up function.
+  const cleanUpPulse = () => {
+    clearInterval(ptr);
+  };
+
+  // On death of transport stop the pulse.
+  transport.cleanUpController.signal.addEventListener("abort", () => {
+    cleanUpPulse();
+  });
+  return cleanUpPulse;
+}
+
 /** Add handlers to listen for events on both ports.  These listners are sutable for both client and server. */
 function addBaseHandlers(transport: MidiTransport) {
   // Add listners
@@ -461,23 +494,23 @@ function connectAddListnersForClockSync(transport: MidiTransport) {
         decoded: { CK },
       } = event;
       const { count, timestamps } = CK;
-      if (count === 1 && timestamps[0]) {
+      if (count === 0 && timestamps[0]) {
         transport.send({
           CK: {
             header: "CK",
-            count: 2,
+            count: 1,
             ssrc: transport.ssrc,
-            timestamps: [timestamps[0], timestamp.nowRTP()],
+            timestamps: [timestamp.nowRTP(), timestamps[0]],
           },
         });
       }
-      if (count === 2 && timestamps[1]) {
+      if (count === 1 && timestamps[1]) {
         transport.send({
           CK: {
             header: "CK",
             count: 2,
             ssrc: transport.ssrc,
-            timestamps: [timestamps[0], timestamps[1], timestamp.nowRTP()],
+            timestamps: [timestamp.nowRTP(), timestamps[1], timestamps[0]],
           },
         });
       }
@@ -495,14 +528,14 @@ function listenAddListnersForClockSync(transport: MidiTransport) {
         decoded: { CK },
       } = event;
       const { count, timestamps } = CK;
-      if (count === 1 && timestamps[0]) {
+      if (count === 0 && timestamps[0]) {
         transport.respond({
           msg: {
             CK: {
               header: "CK",
-              count: 2,
+              count: 1,
               ssrc: transport.ssrc,
-              timestamps: [timestamps[0], timestamp.nowRTP()],
+              timestamps: [timestamp.nowRTP(), timestamps[0]],
             },
           },
           to: {
@@ -511,14 +544,14 @@ function listenAddListnersForClockSync(transport: MidiTransport) {
           },
         });
       }
-      if (count === 2 && timestamps[1]) {
+      if (count === 1 && timestamps[1]) {
         transport.respond({
           msg: {
             CK: {
               header: "CK",
               count: 2,
               ssrc: transport.ssrc,
-              timestamps: [timestamps[0], timestamps[1], timestamp.nowRTP()],
+              timestamps: [timestamp.nowRTP(), timestamps[1], timestamps[0]],
             },
           },
           to: {
@@ -539,7 +572,7 @@ async function connectOkCheck(transport: MidiTransport) {
   const [controlRejected, controlOkay] = await Promise.all([
     transport.waitForMessage({
       command: "NO",
-      exitMs: 525,
+      exitMs: 2000,
     }),
     transport.sendAndWaitForMessage({
       send: {
@@ -553,6 +586,7 @@ async function connectOkCheck(transport: MidiTransport) {
         },
       },
       listen: {
+        exitMs: 2000,
         command: "OK",
         // exitMs: 6000
       },
@@ -568,7 +602,7 @@ async function connectOkCheck(transport: MidiTransport) {
     const [messageRejected, messageOkay] = await Promise.all([
       transport.waitForMessage({
         command: "NO",
-        exitMs: 525,
+        exitMs: 2000,
       }),
       transport.sendAndWaitForMessage({
         send: {

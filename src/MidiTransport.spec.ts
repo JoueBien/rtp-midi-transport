@@ -4,9 +4,10 @@ import { setUpFakeTimers } from "./utils/setUpFakeTimers";
 import { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
 
 describe("MidiTransport", () => {
-  setUpFakeTimers({
-    fake: ["fake", "Date", "performance"],
-  });
+  const { advanceTimersByTimeAsync, runOnlyPendingTimersAsync } =
+    setUpFakeTimers({
+      fake: ["fake", "Date", "performance", "setInterval", "clearInterval"],
+    });
 
   it("Connects and runs through okay check and clocks", async () => {
     const serverOnSpy = vi.fn();
@@ -88,6 +89,41 @@ describe("MidiTransport", () => {
     await vi.waitFor(() => {
       expect(serverOnSpy).toHaveBeenNthCalledWith(
         4,
+        expect.objectContaining({
+          decoded: expect.objectContaining({
+            CK: expect.objectContaining({
+              header: "CK",
+              timestamps: [
+                expect.any(BigInt),
+                expect.any(BigInt),
+                expect.any(BigInt),
+              ],
+            }),
+          }),
+        }),
+      );
+    });
+
+    // Expect that the clock pulse was sent.
+    await advanceTimersByTimeAsync(51 * 1000);
+    await vi.runOnlyPendingTimersAsync();
+
+    await vi.waitFor(() => {
+      expect(serverOnSpy).toHaveBeenNthCalledWith(
+        5,
+        expect.objectContaining({
+          decoded: expect.objectContaining({
+            CK: expect.objectContaining({
+              header: "CK",
+              timestamps: [expect.any(BigInt)],
+            }),
+          }),
+        }),
+      );
+    });
+    await vi.waitFor(() => {
+      expect(serverOnSpy).toHaveBeenNthCalledWith(
+        6,
         expect.objectContaining({
           decoded: expect.objectContaining({
             CK: expect.objectContaining({

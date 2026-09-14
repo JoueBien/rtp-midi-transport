@@ -7,6 +7,11 @@ import {
 import { RtpTimestamps } from "../types";
 
 export type DecodedRrpClockMessage = {
+  /** Count is zero indexed.
+   * 0 = only one timestamp
+   * 1 = two timestamps
+   * 2 = three timestamps
+   */
   count: number;
   ssrc: number;
   timestamps: RtpTimestamps;
@@ -39,13 +44,13 @@ export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
       ] = [unit8Array4];
 
   // Decode second timesmap
-  if (count > 1) {
+  if (count > 0) {
     const { number: timestamp1, unit8Array: unit8Array5 } =
       decodeAndPopInt64Bit(unit8Array4);
     timestamps.push(timestamp1);
     returnBuffer.push(unit8Array5);
     // Decode third timesmap
-    if (count > 2) {
+    if (count > 1) {
       const { number: timestamp2, unit8Array: unit8Array6 } =
         decodeAndPopInt64Bit(unit8Array5);
       timestamps.push(timestamp2);

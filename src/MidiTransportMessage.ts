@@ -77,8 +77,12 @@ export const MidiTransportMessage = {
     // Decode RTP header at start of message
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
+    console.log("@@@FROM<-", command, messageBuffer);
 
     // Decode Midi TODO:
+    if (command === "midi") {
+      // console.log("@@@MIDI FROM<-", unit8Array1);
+    }
 
     // Decode Clock
     if (command === "CK") {
@@ -94,6 +98,7 @@ export const MidiTransportMessage = {
     // Decode Commands
     if (CONTROL_ONLY_COMMAND.includes(command)) {
       const about = decodeAndPopRtpControl(unit8Array1);
+
       return {
         [command]: {
           header: command,
@@ -103,6 +108,7 @@ export const MidiTransportMessage = {
     }
 
     // On We got a bad header return a fallback message.
+    // (console.log("@@@ FB FROM<-", command), messageBuffer);
     return {
       FB: {
         header: "FB",

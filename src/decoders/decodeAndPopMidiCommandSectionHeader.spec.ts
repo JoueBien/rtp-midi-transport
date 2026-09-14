@@ -38,4 +38,22 @@ describe("decodeAndPopMidiCommandSectionHeader", () => {
       messageByteLength: 15,
     });
   });
+
+  it("encodes and decodes a short header with timestamps", () => {
+    const encoded = encodeMidiCommandSectionHeader({
+      journal: false,
+      timestamps: true,
+      runningStatus: false,
+      messageByteLength: 15,
+    });
+
+    const res = decodeAndPopMidiCommandSectionHeader(encoded);
+
+    expect(res).toMatchObject({
+      journal: false,
+      timestamps: true,
+      runningStatus: false,
+      messageByteLength: 15,
+    });
+  });
 });

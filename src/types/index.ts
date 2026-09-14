@@ -6,6 +6,7 @@ export type Command = "IN" | "OK" | "NO" | "BY" | "CK" | "FB";
 
 export type AppleMIDICommand = "midi";
 
+/** Timestamp order of newest is [2, 1, 0]. */
 export type RtpTimestamps =
   | [bigint]
   | [bigint, bigint]
