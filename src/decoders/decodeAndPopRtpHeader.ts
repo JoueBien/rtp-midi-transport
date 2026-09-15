@@ -3,7 +3,11 @@ import {
   decodeAndPopChars,
   SBitsArray,
 } from "@joue-bien/audio-transport";
-import { APPLE_MIDI_HEADER, RTP_HEADER_PADDING } from "./../constrains/headers";
+import {
+  APPLE_MIDI_HEADER,
+  BUFFER_PADDING,
+  RTP_HEADER_PADDING,
+} from "./../constrains/headers";
 import { AppleMIDICommand, Command } from "./../types";
 import { checkCommand } from "../utils/checkCommand";
 
@@ -16,14 +20,16 @@ export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {
   const { unit8Array, bytes: first32Bits } = decodeAndPopBytes(buffer, 4);
   const bitsArray = SBitsArray.from(first32Bits);
 
-  // Check to see if Apple MIDI header.
+  /** Check to see if Apple MIDI header.
+   * @note
+   * Checking if All bits are Apple midi is not implmented. We just check if 2 is in the first two bits.
+   * @note
+   * The X-Tuch sends an M value of 0 which is not standard.
+   * To check ognoreing the M value we can check bits 0-7 and 9-15 match what we expect.*/
   if (
-    APPLE_MIDI_HEADER.equals(bitsArray, {
-      from: 0,
-      to: 15,
-    })
+    !RTP_HEADER_PADDING.equals(bitsArray, { from: 0, to: 7 }) &&
+    APPLE_MIDI_HEADER.equals(bitsArray, { from: 0, to: 1 })
   ) {
-    console.log("@@@MIDI?");
     return {
       command: "midi",
       unit8Array,
