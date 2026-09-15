@@ -85,23 +85,42 @@ export class MidiTransport {
     // Make sure to reply to Clock Requests.
     connectAddListnersForClockSync(this);
 
-    // Ensure we remain connected by continuing to share clock pulses.
-    // addClockPulse(this);
-
     // Run OK Check procedure.
     const okayCheckRes = await connectOkCheck(this);
 
-    // // Send First Clock Sync.
-    // if (okayCheckRes === "ok") {
-    //   this.send({
-    //     CK: {
-    //       header: "CK",
-    //       count: 0,
-    //       ssrc: this.ssrc,
-    //       timestamps: [timestamp.nowRTP()],
-    //     },
-    //   });
-    // }
+    // Send 3 Clock Sycns every 200ms
+    if (okayCheckRes === "ok") {
+      (async () => {
+        this.send({
+          CK: {
+            header: "CK",
+            count: 0,
+            ssrc: this.ssrc,
+            timestamps: [timestamp.nowRTP()],
+          },
+        });
+        await delay({ ms: 200, cancelOnController: this.cleanUpController });
+        this.send({
+          CK: {
+            header: "CK",
+            count: 0,
+            ssrc: this.ssrc,
+            timestamps: [timestamp.nowRTP()],
+          },
+        });
+        await delay({ ms: 200, cancelOnController: this.cleanUpController });
+        this.send({
+          CK: {
+            header: "CK",
+            count: 0,
+            ssrc: this.ssrc,
+            timestamps: [timestamp.nowRTP()],
+          },
+        });
+        // Ensure we remain connected by continuing to share clock pulses.
+        addClockPulse(this);
+      })();
+    }
 
     return okayCheckRes === "ok" ? this.cleanUpController : okayCheckRes;
   }
@@ -438,7 +457,7 @@ function addClockPulse(transport: MidiTransport) {
         },
       });
     }
-  }, 10 * 10000);
+  }, 30 * 10000);
 
   // Clean up function.
   const cleanUpPulse = () => {
