@@ -96,7 +96,7 @@ export class MidiTransport {
             header: "CK",
             count: 0,
             ssrc: this.ssrc,
-            timestamps: [timestamp.nowRTP()],
+            timestamps: [timestamp.nowRTP64Bit()],
           },
         });
         await delay({ ms: 200, cancelOnController: this.cleanUpController });
@@ -105,7 +105,7 @@ export class MidiTransport {
             header: "CK",
             count: 0,
             ssrc: this.ssrc,
-            timestamps: [timestamp.nowRTP()],
+            timestamps: [timestamp.nowRTP64Bit()],
           },
         });
         await delay({ ms: 200, cancelOnController: this.cleanUpController });
@@ -114,7 +114,7 @@ export class MidiTransport {
             header: "CK",
             count: 0,
             ssrc: this.ssrc,
-            timestamps: [timestamp.nowRTP()],
+            timestamps: [timestamp.nowRTP64Bit()],
           },
         });
         // Ensure we remain connected by continuing to share clock pulses.
@@ -453,7 +453,7 @@ function addClockPulse(transport: MidiTransport) {
           header: "CK",
           count: 0,
           ssrc: transport.ssrc,
-          timestamps: [timestamp.nowRTP()],
+          timestamps: [timestamp.nowRTP64Bit()],
         },
       });
     }
@@ -519,7 +519,7 @@ function connectAddListnersForClockSync(transport: MidiTransport) {
             header: "CK",
             count: 1,
             ssrc: transport.ssrc,
-            timestamps: [timestamp.nowRTP(), timestamps[0]],
+            timestamps: [timestamp.nowRTP64Bit(), timestamps[0]],
           },
         });
       }
@@ -529,7 +529,7 @@ function connectAddListnersForClockSync(transport: MidiTransport) {
             header: "CK",
             count: 2,
             ssrc: transport.ssrc,
-            timestamps: [timestamp.nowRTP(), timestamps[1], timestamps[0]],
+            timestamps: [timestamp.nowRTP64Bit(), timestamps[1], timestamps[0]],
           },
         });
       }
@@ -554,7 +554,7 @@ function listenAddListnersForClockSync(transport: MidiTransport) {
               header: "CK",
               count: 1,
               ssrc: transport.ssrc,
-              timestamps: [timestamp.nowRTP(), timestamps[0]],
+              timestamps: [timestamp.nowRTP64Bit(), timestamps[0]],
             },
           },
           to: {
@@ -570,7 +570,11 @@ function listenAddListnersForClockSync(transport: MidiTransport) {
               header: "CK",
               count: 2,
               ssrc: transport.ssrc,
-              timestamps: [timestamp.nowRTP(), timestamps[1], timestamps[0]],
+              timestamps: [
+                timestamp.nowRTP64Bit(),
+                timestamps[1],
+                timestamps[0],
+              ],
             },
           },
           to: {

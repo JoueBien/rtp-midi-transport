@@ -6,9 +6,9 @@ import { timestamp } from "@joue-bien/audio-transport";
 describe("decodeAndPopRtpClock", () => {
   it("encodes and decodes clock values", () => {
     const times: RtpTimestamps = [
-      timestamp.nowRTP(),
-      timestamp.nowRTP(),
-      timestamp.nowRTP(),
+      timestamp.nowRTP64Bit(),
+      timestamp.nowRTP64Bit(),
+      timestamp.nowRTP64Bit(),
     ];
 
     const res = decodeAndPopRtpClock(
@@ -27,7 +27,7 @@ describe("decodeAndPopRtpClock", () => {
   });
 
   it("encodes and decodes a single clock value", () => {
-    const times: RtpTimestamps = [timestamp.nowRTP()];
+    const times: RtpTimestamps = [timestamp.nowRTP64Bit()];
 
     const res = decodeAndPopRtpClock(
       encodeRtpClock({

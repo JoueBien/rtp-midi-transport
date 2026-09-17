@@ -1,4 +1,4 @@
-import { unsignedIntEncoder, intEncoder } from "@joue-bien/audio-transport";
+import { unsignedIntEncoder } from "@joue-bien/audio-transport";
 import { BUFFER_PADDING } from "../constrains/headers";
 import { RtpTimestamps } from "../types";
 
@@ -29,7 +29,7 @@ export function encodeRtpClock(params: {
     // Encode timestamps
     ...Buffer.concat(
       // TODO: Make unsigned
-      timestamps.map((stamp) => intEncoder.encode64Bit(stamp)),
+      timestamps.map((stamp) => unsignedIntEncoder.encode64Bit(stamp)),
     ),
   ]);
 }

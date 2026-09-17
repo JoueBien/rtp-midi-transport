@@ -2,7 +2,7 @@ import {
   decodeAndPopChars,
   decodeAndPopUnsignedInit,
   decodeAndPopUnsignedInit8Bit,
-  decodeAndPopInt64Bit,
+  decodeAndPopUnsignedInt64Bit,
 } from "@joue-bien/audio-transport";
 import { RtpTimestamps } from "../types";
 
@@ -31,7 +31,7 @@ export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
 
   // Decode first timesmap
   const { number: timestamp0, unit8Array: unit8Array4 } =
-    decodeAndPopInt64Bit(unit8Array3);
+    decodeAndPopUnsignedInt64Bit(unit8Array3);
 
   const timestamps: RtpTimestamps = [timestamp0];
   const returnBuffer:
@@ -46,13 +46,13 @@ export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
   // Decode second timesmap
   if (count > 0) {
     const { number: timestamp1, unit8Array: unit8Array5 } =
-      decodeAndPopInt64Bit(unit8Array4);
+      decodeAndPopUnsignedInt64Bit(unit8Array4);
     timestamps.push(timestamp1);
     returnBuffer.push(unit8Array5);
     // Decode third timesmap
     if (count > 1) {
       const { number: timestamp2, unit8Array: unit8Array6 } =
-        decodeAndPopInt64Bit(unit8Array5);
+        decodeAndPopUnsignedInt64Bit(unit8Array5);
       timestamps.push(timestamp2);
       returnBuffer.push(unit8Array6);
     }
