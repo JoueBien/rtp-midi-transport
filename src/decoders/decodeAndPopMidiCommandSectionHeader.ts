@@ -1,8 +1,8 @@
 import {
   decodeAndPopBytes,
-  decodeAndPopInit8Bit,
+  decodeAndPopUnsignedInit8Bit,
   SBitsArray,
-  decodeAndPopInit16Bit,
+  decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
 
 /**
@@ -67,7 +67,7 @@ export function decodeAndPopMidiCommandSectionHeader(
     const lenBits = SBitsArray.fromSBits(headerBits.slice(16 - 12, 16));
     lenBits.alignBytes();
 
-    const { number } = decodeAndPopInit16Bit(lenBits.unit8Array);
+    const { number } = decodeAndPopUnsignedInit16Bit(lenBits.unit8Array);
     return {
       messageByteLength: number,
       journal: headerBits[1] === "1" ? true : false,
@@ -81,7 +81,7 @@ export function decodeAndPopMidiCommandSectionHeader(
   const lenBits = SBitsArray.fromSBits(headerBits.slice(8 - 4, 8));
   lenBits.alignBytes();
 
-  const { number } = decodeAndPopInit8Bit(lenBits.unit8Array);
+  const { number } = decodeAndPopUnsignedInit8Bit(lenBits.unit8Array);
 
   return {
     messageByteLength: number,

@@ -56,4 +56,20 @@ describe("decodeAndPopMidiCommandSectionHeader", () => {
       messageByteLength: 15,
     });
   });
+
+  it("encodes and decodes a short header from the X-touch", () => {
+    const res = decodeAndPopMidiCommandSectionHeader(
+      new Uint8Array([
+        // 128, 97, 160, 12, 0, 6, 90, 34, 100,
+        3, 160, 23, 3, 144, 24, 127,
+      ]),
+    );
+
+    expect(res).toMatchObject({
+      journal: false,
+      timestamps: false,
+      runningStatus: false,
+      messageByteLength: 3,
+    });
+  });
 });

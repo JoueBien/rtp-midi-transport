@@ -11,6 +11,7 @@ import { encodeRtpHeader } from "./encode/encodeRtpHeader";
 import { encodRtpControl } from "./encode/encodRtpControl";
 import { encodeRtpClock } from "./encode/encodeRtpClock";
 import { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
+import { decodeAndPopRtpMidi } from "./decoders/decodeAndPopRtpMidi";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",
@@ -81,7 +82,14 @@ export const MidiTransportMessage = {
 
     // Decode Midi TODO:
     if (command === "midi") {
-      // console.log("@@@MIDI FROM<-", unit8Array1);
+      const midi = decodeAndPopRtpMidi(unit8Array1);
+      console.log("@@@MIDI DECODE<-", midi);
+      return {
+        midi: {
+          header: "midi",
+          ...midi,
+        },
+      };
     }
 
     // Decode Clock

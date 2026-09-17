@@ -1,4 +1,4 @@
-import { intEncoder, timestamp } from "@joue-bien/audio-transport";
+import { unsignedIntEncoder, timestamp } from "@joue-bien/audio-transport";
 import { MidiTransportMessage } from "./MidiTransportMessage";
 import { encodeRtpHeader } from "./encode/encodeRtpHeader";
 
@@ -36,9 +36,9 @@ describe("MidiTransportMessage", () => {
     const res = MidiTransportMessage.decode(
       new Uint8Array([
         ...encodeRtpHeader({ command: "BY" }),
-        ...intEncoder.encode(version),
-        ...intEncoder.encode(token),
-        ...intEncoder.encode(ssrc),
+        ...unsignedIntEncoder.encode(version),
+        ...unsignedIntEncoder.encode(token),
+        ...unsignedIntEncoder.encode(ssrc),
       ]),
     );
 
@@ -53,6 +53,11 @@ describe("MidiTransportMessage", () => {
       },
     });
   });
+
+  // new Uint8Array([
+  //       // 128, 97,
+  //       160, 12, 0, 6, 90, 34, 100, 3, 160, 23, 3, 144, 24, 127,
+  //     ]),
 
   it("encodes and decodes clocks", () => {
     const now = timestamp.nowRTP();
@@ -74,6 +79,31 @@ describe("MidiTransportMessage", () => {
         ssrc: 123123123,
         timestamps: [now],
         unit8Array: expect.any(Uint8Array),
+      },
+    });
+  });
+
+  it("encodes and decodes midi messages", () => {
+    const now = timestamp.nowRTP();
+    const res = MidiTransportMessage.decode(
+      new Uint8Array([
+        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
+      ]),
+    );
+
+    expect(res).toMatchObject({
+      midi: {
+        header: "midi",
+        details: {
+          journal: false,
+          messageByteLength: 8,
+          runningStatus: true,
+          sequence: 6,
+          ssrc: 2685862800,
+          timestamp: 1801872387,
+          timestamps: false,
+        },
+        data: {},
       },
     });
   });

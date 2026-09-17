@@ -1,7 +1,7 @@
 import {
   decodeAndPopChars,
-  decodeAndPopInit,
-  decodeAndPopInit8Bit,
+  decodeAndPopUnsignedInit,
+  decodeAndPopUnsignedInit8Bit,
   decodeAndPopInt64Bit,
 } from "@joue-bien/audio-transport";
 import { RtpTimestamps } from "../types";
@@ -21,10 +21,10 @@ export type DecodedRrpClockMessage = {
 /** Decode and pop values for CK */
 export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
   const { unit8Array: unit8Array1, number: ssrc } =
-    decodeAndPopInit(unit8Array);
+    decodeAndPopUnsignedInit(unit8Array);
 
   const { number: count, unit8Array: unit8Array2 } =
-    decodeAndPopInit8Bit(unit8Array1);
+    decodeAndPopUnsignedInit8Bit(unit8Array1);
 
   // Pop 3 bytes of padding
   const { unit8Array: unit8Array3 } = decodeAndPopChars(unit8Array2, 3);

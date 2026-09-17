@@ -1,6 +1,7 @@
 import { RemoteInfo } from "dgram";
 import { DecodedRrpControlMessage } from "../decoders/decodeAndPopRtpControl";
 import { DecodedRrpClockMessage } from "../decoders/decodeAndPopRtpClock";
+import { DecodedRrpMidiMessage } from "../decoders/decodeAndPopRtpMidi";
 
 export type Command = "IN" | "OK" | "NO" | "BY" | "CK" | "FB";
 
@@ -52,7 +53,7 @@ export type DecodedMidiTransportMessage = {
 
   midi: {
     header: AppleMIDICommand;
-  };
+  } & DecodedRrpMidiMessage;
 
   FB: {
     header: Extract<Command, "FB">;

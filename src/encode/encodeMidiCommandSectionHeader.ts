@@ -1,4 +1,4 @@
-import { intEncoder, SBitsArray } from "@joue-bien/audio-transport";
+import { unsignedIntEncoder, SBitsArray } from "@joue-bien/audio-transport";
 
 /**
  * Creates a midi list header.
@@ -36,8 +36,14 @@ export function encodeMidiCommandSectionHeader(params: {
 
   const len =
     messageByteLength > 15
-      ? SBitsArray.from(intEncoder.encode(messageByteLength)).slice(32 - 12, 32)
-      : SBitsArray.from(intEncoder.encode(messageByteLength)).slice(32 - 4, 32);
+      ? SBitsArray.from(unsignedIntEncoder.encode(messageByteLength)).slice(
+          32 - 12,
+          32,
+        )
+      : SBitsArray.from(unsignedIntEncoder.encode(messageByteLength)).slice(
+          32 - 4,
+          32,
+        );
 
   const header = SBitsArray.fromSBits([
     messageByteLength > 15 ? "1" : "0",
