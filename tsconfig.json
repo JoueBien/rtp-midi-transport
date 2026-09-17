@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "NodeNext",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2020",
     "moduleResolution": "nodenext",
     "sourceMap": true,
     "outDir": "./dist",
@@ -10,6 +10,6 @@
     "types": ["vitest/globals", "node"],
     "skipLibCheck": true
   },
-  "lib": ["es2015"],
+  "lib": ["es2020"],
   "include": ["src/**/*.ts", "tests/**/*.test.ts"]
 }
