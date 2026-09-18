@@ -86,7 +86,11 @@ describe("MidiTransportMessage", () => {
   it("encodes and decodes midi messages", () => {
     const res = MidiTransportMessage.decode(
       new Uint8Array([
-        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
+        // CH 2 Button on, o valocity
+        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 145, 24, 0,
+
+        // CH 1 Button on, o valocity
+        // 128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
       ]),
     );
 

@@ -78,7 +78,6 @@ export const MidiTransportMessage = {
     // Decode RTP header at start of message
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
-    console.log("@@@No Headeer", unit8Array1);
     // console.log("@@@FROM<-", command, messageBuffer);
 
     // Decode Midi TODO:

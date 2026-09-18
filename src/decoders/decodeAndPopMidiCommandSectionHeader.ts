@@ -61,7 +61,6 @@ export function decodeAndPopMidiCommandSectionHeader(
   // Use the long for working on the header.
   const headerBits = SBitsArray.from(longHeader);
   const isTwoBytesLong = headerBits[0] === "1" ? true : false;
-  console.log("@@@headerBits", headerBits);
 
   // Handel decoding long header
   if (isTwoBytesLong) {

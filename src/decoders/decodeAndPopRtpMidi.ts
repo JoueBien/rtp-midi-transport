@@ -3,6 +3,10 @@ import {
   decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
 import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
+import {
+  DecodeAndPopMidiData,
+  decodeAndPopMidiData,
+} from "./decodeAndPopMidiData";
 
 export type DecodedRrpMidiMessage = {
   details: {
@@ -25,7 +29,7 @@ export type DecodedRrpMidiMessage = {
      * Original used midi repeate command. */
     runningStatus: boolean;
   };
-  data: {};
+  data: DecodeAndPopMidiData;
 };
 
 export function decodeAndPopRtpMidi(
@@ -49,6 +53,7 @@ export function decodeAndPopRtpMidi(
   } = decodeAndPopMidiCommandSectionHeader(unit8Array3);
 
   // Decode the Midi message
+  const midiData = decodeAndPopMidiData(unit8Array4);
 
   return {
     details: {
@@ -60,6 +65,8 @@ export function decodeAndPopRtpMidi(
       timestamps,
       runningStatus,
     },
-    data: {},
+    data: {
+      ...midiData,
+    },
   };
 }
