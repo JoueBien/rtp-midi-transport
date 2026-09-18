@@ -49,11 +49,11 @@ describe("MidiTransport", () => {
 
       // Connect to client to server and finish connection handshake.
       const floatingClientOkay = await client.connect();
-      console.log("@@@", floatingClientOkay);
+      console.log("@@@CONNECTED", floatingClientOkay);
       expect(floatingClientOkay).toMatchObject(expect.any(AbortController));
 
       await delay({
-        ms: 50 * 10000 * 2,
+        ms: 50 * 1000 * 2,
       });
 
       client.send({

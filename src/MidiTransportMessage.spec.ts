@@ -84,7 +84,6 @@ describe("MidiTransportMessage", () => {
   });
 
   it("encodes and decodes midi messages", () => {
-    const now = timestamp.nowRTP64Bit();
     const res = MidiTransportMessage.decode(
       new Uint8Array([
         128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
@@ -96,11 +95,11 @@ describe("MidiTransportMessage", () => {
         header: "midi",
         details: {
           journal: false,
-          messageByteLength: 8,
-          runningStatus: true,
-          sequence: 6,
-          ssrc: 2685862800,
-          timestamp: 1801872387,
+          messageByteLength: 3,
+          runningStatus: false,
+          sequence: 40979,
+          ssrc: 1677959191,
+          timestamp: 420710,
           timestamps: false,
         },
         data: {},

@@ -32,7 +32,7 @@ export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {
   ) {
     return {
       command: "midi",
-      unit8Array,
+      unit8Array: decodeAndPopBytes(buffer, 2).unit8Array,
     };
   }
 
