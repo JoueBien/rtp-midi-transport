@@ -87,10 +87,10 @@ describe("MidiTransportMessage", () => {
     const res = MidiTransportMessage.decode(
       new Uint8Array([
         // CH 2 Button on, o valocity
-        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 145, 24, 0,
+        // 128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 145, 24, 0,
 
         // CH 1 Button on, o valocity
-        // 128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
+        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
       ]),
     );
 
@@ -107,6 +107,39 @@ describe("MidiTransportMessage", () => {
           timestamps: false,
         },
         data: {},
+      },
+    });
+  });
+
+  it("encodes and decodes system exclusive midi messages", () => {
+    const res = MidiTransportMessage.decode(
+      new Uint8Array([
+        // SYS X "hi"
+        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 4, 240, 104, 105,
+        247,
+      ]),
+    );
+
+    expect(res).toMatchObject({
+      midi: {
+        header: "midi",
+        details: {
+          sequence: 40979,
+          timestamp: 420710,
+          ssrc: 1677959191,
+          messageByteLength: 4,
+          journal: false,
+          timestamps: false,
+          runningStatus: false,
+        },
+        data: {
+          channel: -1,
+          command: 240,
+          label: "SystemExclusiveStart",
+          data: Uint8Array.from([104, 105]),
+          unit8Array: {},
+          popped: 4,
+        },
       },
     });
   });
