@@ -32,6 +32,7 @@ export type DecodeAndPopMidiData = {
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.
    * If the command has no data bytes then both indexes will be set to 0.
+   * If the command is SystemExclusiveStart then data will be a Unit8Array filled with the message.
    */
   data: [number, number] | Uint8Array<ArrayBuffer>;
   /** The buffer minus the single MIDI message that was popped. */
@@ -52,8 +53,6 @@ export function decodeAndPopMidiData(
   );
 
   // Check if Command is "System Common Messages" or "System Real-Time Messages"
-  // https://midi.org/summary-of-midi-1-0-messages
-  // Note Missing undefined or SysEx.
   const { number: sysCommand } = decodeAndPopUnsignedInit8Bit(commandByte);
   console.log("@@@sysCommand", sysCommand);
   if (sysCommand >= 240) {
