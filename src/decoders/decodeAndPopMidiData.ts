@@ -58,7 +58,7 @@ export function decodeAndPopMidiData(
   console.log("@@@sysCommand", sysCommand);
   if (sysCommand >= 240) {
     const midiDataDecoded: {
-      data: [number, number];
+      data: [number, number] | Uint8Array<ArrayBuffer>;
       unit8Array: Uint8Array<ArrayBuffer>;
       popped: number;
     } = (() => {
@@ -128,7 +128,7 @@ export function decodeAndPopMidiData(
     };
   }
 
-  // Check if Channel Voice Messages
+  // Check if Channel Messages
   // Get command and channe type
   const commandSection = SBitsArray.from(commandByte);
 
