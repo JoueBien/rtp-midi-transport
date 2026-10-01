@@ -14,7 +14,7 @@ Documintation can be found on the projects [GitHub Wiki](https://github.com/Joue
 
 This library is focused on MIDI controllers and not real-time music playback. As control is the focus, there are a number of features that have not been implemented. I don't particularly like MIDI, so It's more or less implement as much as I need to be able to work with an X-Touch/X-Touch Extender/MC Hardware.
 
-If there is a missing feature you need, don't expect it to be added any time soon. Merge requests are welcome if you want to add or fix a missing feature.
+If there is a missing feature you need, don't expect it to be added any time soon. Merge requests are welcome if you want to add a feature or fix a missing feature.
 
 ## Never going to be implemented
 
