@@ -3,10 +3,9 @@ import {
   decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
 import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
-import {
-  DecodeAndPopMidiData,
-  decodeAndPopMidiData,
-} from "./decodeAndPopMidiData";
+import { decodeAndPopMidiDataList } from "./decodeAndPopMidiData";
+import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+import { MidiData } from "../types/MidiData";
 
 export type DecodedRrpMidiMessage = {
   details: {
@@ -29,7 +28,12 @@ export type DecodedRrpMidiMessage = {
      * Original used midi repeate command. */
     runningStatus: boolean;
   };
-  data: DecodeAndPopMidiData;
+  /** Midi Messages. */
+  data: ExactlyOneKeyValuePair<MidiData>[];
+  /** The next part of the buffer (empty or journal). */
+  unit8Array: Uint8Array<ArrayBuffer>;
+  /** How man bytes were poped for just the midi data. */
+  popped: number;
 };
 
 export function decodeAndPopRtpMidi(
@@ -53,7 +57,14 @@ export function decodeAndPopRtpMidi(
   } = decodeAndPopMidiCommandSectionHeader(unit8Array3);
 
   // Decode the Midi message
-  const midiData = decodeAndPopMidiData(unit8Array4);
+  const {
+    vaule: midiData,
+    popped,
+    unit8Array: unit8ArrayNext,
+  } = decodeAndPopMidiDataList({
+    unit8Array: unit8Array4,
+    messageByteLength,
+  });
 
   return {
     details: {
@@ -65,8 +76,8 @@ export function decodeAndPopRtpMidi(
       timestamps,
       runningStatus,
     },
-    data: {
-      ...midiData,
-    },
+    data: midiData,
+    unit8Array: unit8ArrayNext,
+    popped,
   };
 }

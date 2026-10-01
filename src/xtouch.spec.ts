@@ -4,7 +4,7 @@ import { setUpFakeTimers } from "./utils/setUpFakeTimers";
 import { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
 import { delay } from "@joue-bien/audio-transport";
 
-describe("MidiTransport", () => {
+describe.skip("MidiTransport", () => {
   // beforeEach(() => {
   //   vi.setConfig({
   //     testTimeout: 60 * 1000,
@@ -15,7 +15,7 @@ describe("MidiTransport", () => {
   //     fake: ["fake", "Date", "performance", "setInterval", "clearInterval"],
   //   });
 
-  it.skip(
+  it(
     "Connects and runs through okay check and clocks",
     {
       timeout: 60 * 1000 * 2,
@@ -56,9 +56,20 @@ describe("MidiTransport", () => {
         ms: 50 * 1000 * 2,
       });
 
-      client.send({
+      await client.send({
         BY: {
           on: "control",
+          header: "BY",
+          version: 2,
+          token: client.token,
+          ssrc: client.ssrc,
+          name: "CTL",
+        },
+      });
+
+      await client.send({
+        BY: {
+          on: "message",
           header: "BY",
           version: 2,
           token: client.token,

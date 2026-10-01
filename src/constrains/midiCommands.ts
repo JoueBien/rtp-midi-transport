@@ -1,25 +1,4 @@
-/** Human redable labels for MIDI command bytes. */
-export type MidiLabel =
-  | "NoteOff"
-  | "NoteOn"
-  | "PolyphonicAftertouch"
-  | "ControlChange"
-  | "ProgramChange"
-  | "ChannelAftertouch"
-  | "PitchBend"
-  | "TimeCodeQuarterFrame"
-  | "SongPositionPointer"
-  | "SongSelect"
-  | "TuneRequest"
-  | "TimingClock"
-  | "Start"
-  | "Continue"
-  | "Stop"
-  | "ActiveSensing"
-  | "SystemReset"
-  | "SystemExclusiveStart"
-  | "SystemExclusiveEnd"
-  | "Undefined";
+import { MidiLabel } from "../types/MidiData";
 
 /** Look up for labels to 4 bit MIDI commands.
  * Note Undefined is not in this list.
@@ -45,7 +24,7 @@ export const LABEL_TO_MIDI_LOOK_UP: Record<MidiLabel, number> = {
   SystemExclusiveStart: 240,
   SystemExclusiveEnd: 247,
 
-  /** Here to exaust types. DO NOT USE to look up  */
+  /** Here to exaust types. DO NOT USE to look up. */
   Undefined: 253,
 };
 
@@ -70,7 +49,6 @@ export const MIDI_TO_LABEL_LOOK_UP: Record<number, MidiLabel> = {
   255: "SystemReset",
   240: "SystemExclusiveStart",
   247: "SystemExclusiveEnd",
-
   244: "Undefined",
   245: "Undefined",
   249: "Undefined",
@@ -119,7 +97,7 @@ export const MIDI_3_BYTE_COMMANDS_LONG: number[] = [
 ];
 
 /** Look up MIDI command and get string back. */
-export function commandToLabel(command: number): MidiLabel | "Undefined" {
+export function commandToLabel(command: number): MidiLabel {
   return MIDI_TO_LABEL_LOOK_UP[command] || "Undefined";
 }
 

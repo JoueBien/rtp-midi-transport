@@ -54,11 +54,6 @@ describe("MidiTransportMessage", () => {
     });
   });
 
-  // new Uint8Array([
-  //       // 128, 97,
-  //       160, 12, 0, 6, 90, 34, 100, 3, 160, 23, 3, 144, 24, 127,
-  //     ]),
-
   it("encodes and decodes clocks", () => {
     const now = timestamp.nowRTP64Bit();
     const res = MidiTransportMessage.decode(
@@ -106,17 +101,28 @@ describe("MidiTransportMessage", () => {
           timestamp: 420710,
           timestamps: false,
         },
-        data: {},
+        data: [
+          {
+            "9": {
+              command: 9,
+              channel: 0,
+              label: "NoteOn",
+              data: [24, 0],
+            },
+          },
+        ],
+        unit8Array: new Uint8Array(0),
+        popped: 1,
       },
     });
   });
 
-  it("encodes and decodes system exclusive midi messages", () => {
+  it("encodes and decodes system exclusive midi messages and Note On", () => {
     const res = MidiTransportMessage.decode(
       new Uint8Array([
         // SYS X "hi"
-        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 4, 240, 104, 105,
-        247,
+        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 7, 240, 104, 105,
+        247, 144, 24, 0,
       ]),
     );
 
@@ -127,19 +133,28 @@ describe("MidiTransportMessage", () => {
           sequence: 40979,
           timestamp: 420710,
           ssrc: 1677959191,
-          messageByteLength: 4,
+          messageByteLength: 7,
           journal: false,
           timestamps: false,
           runningStatus: false,
         },
-        data: {
-          channel: -1,
-          command: 240,
-          label: "SystemExclusiveStart",
-          data: Uint8Array.from([104, 105]),
-          unit8Array: {},
-          popped: 4,
-        },
+        data: [
+          {
+            240: {
+              command: 240,
+              data: Uint8Array.from([104, 105]),
+              label: "SystemExclusiveStart",
+            },
+          },
+          {
+            9: {
+              channel: 0,
+              command: 9,
+              data: [24, 0],
+              label: "NoteOn",
+            },
+          },
+        ],
       },
     });
   });

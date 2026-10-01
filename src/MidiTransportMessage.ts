@@ -12,6 +12,8 @@ import { encodRtpControl } from "./encode/encodRtpControl";
 import { encodeRtpClock } from "./encode/encodeRtpClock";
 import { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
 import { decodeAndPopRtpMidi } from "./decoders/decodeAndPopRtpMidi";
+import { encodeMidiCommandSectionHeader } from "./encode/encodeMidiCommandSectionHeader";
+import { encodeMidiData } from "./encode/encodeMidiData";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",
@@ -25,6 +27,14 @@ export const MidiTransportMessage = {
     params: Pick<MidiTransportMessageParams, T>,
   ) {
     // Encode Midi TODO:
+
+    if ("midi" in params) {
+      return new Uint8Array([
+        ...encodeRtpHeader({ command: "midi" }),
+        // encodeMidiCommandSectionHeader
+        // encodeMidiData
+      ]);
+    }
 
     // params.CK
     if ("CK" in params) {
@@ -78,7 +88,6 @@ export const MidiTransportMessage = {
     // Decode RTP header at start of message
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
-    // console.log("@@@FROM<-", command, messageBuffer);
 
     // Decode Midi TODO:
     if (command === "midi") {
@@ -117,7 +126,6 @@ export const MidiTransportMessage = {
     }
 
     // On We got a bad header return a fallback message.
-    // (console.log("@@@ FB FROM<-", command), messageBuffer);
     return {
       FB: {
         header: "FB",

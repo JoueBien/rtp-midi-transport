@@ -293,7 +293,6 @@ export class MidiTransport {
     msg: Pick<MidiTransportMessageSendParams, T>,
   ) {
     const messageBuffer = MidiTransportMessage.encode(msg);
-    // console.log("@@@SEND->", Object.keys(msg)[0], messageBuffer);
 
     if ("midi" in msg) {
       return this.messageClient.send(messageBuffer);
