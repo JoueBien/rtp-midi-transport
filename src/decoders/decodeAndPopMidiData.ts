@@ -39,7 +39,7 @@ export function decodeAndPopMidiDataList(params: {
   unit8Array: Uint8Array<ArrayBuffer>;
   messageByteLength: number;
 }): {
-  vaule: ExactlyOneKeyValuePair<MidiData>[];
+  data: ExactlyOneKeyValuePair<MidiData>[];
   unit8Array: Uint8Array<ArrayBuffer>;
   popped: number;
 } {
@@ -48,7 +48,7 @@ export function decodeAndPopMidiDataList(params: {
   // Set up extraction datal
   let counter = messageByteLength; // Keep Track of how many bytes we have left.
   let depthStop = messageByteLength; // Don't enter an endless loop - stop at 1 times the byte length.
-  const vaule: ExactlyOneKeyValuePair<MidiData>[] = [];
+  const vaules: ExactlyOneKeyValuePair<MidiData>[] = [];
   let unit8ArrayWorking = unit8Array; // Keep updating the array.
   let encountedFailure = false;
 
@@ -59,7 +59,7 @@ export function decodeAndPopMidiDataList(params: {
       unit8Array: unit8ArrayNext,
       popped,
     } = decodeAndPopMidiData(unit8ArrayWorking);
-    vaule.push(vauleItem);
+    vaules.push(vauleItem);
     if (popped === 0) {
       encountedFailure = true;
       break;
@@ -70,9 +70,9 @@ export function decodeAndPopMidiDataList(params: {
   }
 
   return {
-    vaule: vaule,
+    data: vaules,
     unit8Array: unit8ArrayWorking,
-    popped: encountedFailure === true ? 0 : vaule.length,
+    popped: encountedFailure === true ? 0 : vaules.length,
   };
 }
 

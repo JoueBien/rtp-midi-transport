@@ -2,6 +2,8 @@ import { RemoteInfo } from "dgram";
 import { DecodedRrpControlMessage } from "../decoders/decodeAndPopRtpControl";
 import { DecodedRrpClockMessage } from "../decoders/decodeAndPopRtpClock";
 import { DecodedRrpMidiMessage } from "../decoders/decodeAndPopRtpMidi";
+import { ExactlyOneKeyValuePair } from "./ExactlyOneKeyValuePair";
+import { MidiData } from "./MidiData";
 
 export type Command = "IN" | "OK" | "NO" | "BY" | "CK" | "FB";
 
@@ -102,6 +104,10 @@ export type MidiTransportMessageParams = {
 
   midi: {
     header: AppleMIDICommand;
+    sequence: number;
+    timestamp: number;
+    ssrc: number;
+    data: ExactlyOneKeyValuePair<MidiData>[];
   };
 };
 
@@ -132,6 +138,7 @@ export type MidiTransportMessageSendParams = {
     ssrc: number;
     name: string;
   };
+
   NO: {
     on: OnTransport;
     header: Extract<Command, "NO">;
@@ -150,5 +157,9 @@ export type MidiTransportMessageSendParams = {
 
   midi: {
     header: AppleMIDICommand;
+    sequence: number;
+    timestamp: number;
+    ssrc: number;
+    data: ExactlyOneKeyValuePair<MidiData>[];
   };
 };

@@ -14,6 +14,7 @@ import { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransport
 import { decodeAndPopRtpMidi } from "./decoders/decodeAndPopRtpMidi";
 import { encodeMidiCommandSectionHeader } from "./encode/encodeMidiCommandSectionHeader";
 import { encodeMidiData } from "./encode/encodeMidiData";
+import { encodeRtpMidi } from "./encode/encodeRtpMidi";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",
@@ -26,13 +27,11 @@ export const MidiTransportMessage = {
   encode: function encode<T extends keyof MidiTransportMessageParams>(
     params: Pick<MidiTransportMessageParams, T>,
   ) {
-    // Encode Midi TODO:
-
     if ("midi" in params) {
+      const command = castMidiTransportMessageParamsTo<T, "midi">(params);
       return new Uint8Array([
         ...encodeRtpHeader({ command: "midi" }),
-        // encodeMidiCommandSectionHeader
-        // encodeMidiData
+        ...encodeRtpMidi(command.midi),
       ]);
     }
 

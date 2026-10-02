@@ -80,27 +80,43 @@ describe("MidiTransportMessage", () => {
 
   it("encodes and decodes midi messages", () => {
     const res = MidiTransportMessage.decode(
-      new Uint8Array([
-        // CH 2 Button on, o valocity
-        // 128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 145, 24, 0,
+      MidiTransportMessage.encode({
+        midi: {
+          header: "midi",
+          sequence: 40979,
+          timestamp: 420710,
+          ssrc: 1677959191,
+          data: [
+            {
+              "9": {
+                command: 9,
+                channel: 0,
+                label: "NoteOn",
+                data: [24, 0],
+              },
+            },
+          ],
+        },
+      }),
+      // new Uint8Array([
+      //   // CH 2 Button on, o valocity
+      //   // 128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 145, 24, 0,
 
-        // CH 1 Button on, o valocity
-        128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
-      ]),
+      //   // CH 1 Button on, o valocity
+      //   128, 97, 160, 19, 0, 6, 107, 102, 100, 3, 160, 23, 3, 144, 24, 0,
+      // ]),
     );
 
     expect(res).toMatchObject({
       midi: {
         header: "midi",
-        details: {
-          journal: false,
-          messageByteLength: 3,
-          runningStatus: false,
-          sequence: 40979,
-          ssrc: 1677959191,
-          timestamp: 420710,
-          timestamps: false,
-        },
+        journal: false,
+        messageByteLength: 3,
+        runningStatus: false,
+        sequence: 40979,
+        ssrc: 1677959191,
+        timestamp: 420710,
+        timestamps: false,
         data: [
           {
             "9": {
@@ -129,15 +145,13 @@ describe("MidiTransportMessage", () => {
     expect(res).toMatchObject({
       midi: {
         header: "midi",
-        details: {
-          sequence: 40979,
-          timestamp: 420710,
-          ssrc: 1677959191,
-          messageByteLength: 7,
-          journal: false,
-          timestamps: false,
-          runningStatus: false,
-        },
+        sequence: 40979,
+        timestamp: 420710,
+        ssrc: 1677959191,
+        messageByteLength: 7,
+        journal: false,
+        timestamps: false,
+        runningStatus: false,
         data: [
           {
             240: {

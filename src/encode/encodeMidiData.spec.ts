@@ -41,7 +41,7 @@ describe("encodeMidiData", () => {
     ).toMatchObject({
       popped: 3,
       unit8Array: new Uint8Array(0),
-      vaule: [
+      data: [
         {
           8: {
             channel: 5,

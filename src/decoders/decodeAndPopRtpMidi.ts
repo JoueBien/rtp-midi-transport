@@ -8,26 +8,22 @@ import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
 import { MidiData } from "../types/MidiData";
 
 export type DecodedRrpMidiMessage = {
-  details: {
-    /** 16 Bit seqience number of Midi Message. */
-    sequence: number;
-    /** 32 Bit timestamp of when the action happened. */
-    timestamp: number;
-    /** The RTP SSRC ID */
-    ssrc: number;
-    /** How many bytes there are to the midi message */
-    messageByteLength: number;
-    /** Is there a journal section */
-    journal: boolean;
-    /**
-     * true - denotes if the midi list includes 4 byte timestamps before each Midi command in the MIDI List.
-     * (1-4 octets long, or 0 octets if Z = 0).*/
-    timestamps: boolean;
-    /**
-     *
-     * Original used midi repeate command. */
-    runningStatus: boolean;
-  };
+  /** 16 Bit seqience number of Midi Message. */
+  sequence: number;
+  /** 32 Bit timestamp of when the action happened. */
+  timestamp: number;
+  /** The RTP SSRC ID */
+  ssrc: number;
+  /** How many bytes there are to the midi message */
+  messageByteLength: number;
+  /** Is there a journal section */
+  journal: boolean;
+  /**
+   * true - denotes if the midi list includes 4 byte timestamps before each Midi command in the MIDI List.
+   * (1-4 octets long, or 0 octets if Z = 0).*/
+  timestamps: boolean;
+  /** Original used midi repeate command. */
+  runningStatus: boolean;
   /** Midi Messages. */
   data: ExactlyOneKeyValuePair<MidiData>[];
   /** The next part of the buffer (empty or journal). */
@@ -58,7 +54,7 @@ export function decodeAndPopRtpMidi(
 
   // Decode the Midi message
   const {
-    vaule: midiData,
+    data: midiData,
     popped,
     unit8Array: unit8ArrayNext,
   } = decodeAndPopMidiDataList({
@@ -67,15 +63,13 @@ export function decodeAndPopRtpMidi(
   });
 
   return {
-    details: {
-      sequence,
-      timestamp,
-      ssrc,
-      messageByteLength,
-      journal,
-      timestamps,
-      runningStatus,
-    },
+    sequence,
+    timestamp,
+    ssrc,
+    messageByteLength,
+    journal,
+    timestamps,
+    runningStatus,
     data: midiData,
     unit8Array: unit8ArrayNext,
     popped,

@@ -10,15 +10,13 @@ describe("decodeAndPopRtpMidi", () => {
     );
 
     expect(res).toMatchObject({
-      details: {
-        sequence: 40972,
-        timestamp: 416290,
-        ssrc: 1677959191,
-        messageByteLength: 3,
-        journal: false,
-        timestamps: false,
-        runningStatus: false,
-      },
+      sequence: 40972,
+      timestamp: 416290,
+      ssrc: 1677959191,
+      messageByteLength: 3,
+      journal: false,
+      timestamps: false,
+      runningStatus: false,
       data: [
         {
           "9": {
