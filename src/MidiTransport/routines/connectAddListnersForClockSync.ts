@@ -14,8 +14,8 @@ export function connectAddListnersForClockSync(transport: MidiTransportLike) {
         transport.send({
           CK: {
             header: "CK",
-            count: 1,
-            ssrc: transport.ssrc,
+            // count: 1,
+            // ssrc: transport.ssrc,
             timestamps: [timestamp.nowRTP64Bit(), timestamps[0]],
           },
         });
@@ -24,8 +24,8 @@ export function connectAddListnersForClockSync(transport: MidiTransportLike) {
         transport.send({
           CK: {
             header: "CK",
-            count: 2,
-            ssrc: transport.ssrc,
+            // count: 2,
+            // ssrc: transport.ssrc,
             timestamps: [timestamp.nowRTP64Bit(), timestamps[1], timestamps[0]],
           },
         });

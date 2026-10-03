@@ -115,51 +115,51 @@ export type MidiTransportMessageSendParams = {
   OK: {
     on: OnTransport;
     header: Extract<Command, "OK">;
-    version: number;
-    token: number;
-    ssrc: number;
-    name: string;
+    // version: number;
+    // token: number;
+    // ssrc: number;
+    // name: string;
   };
 
   IN: {
     on: OnTransport;
     header: Extract<Command, "IN">;
-    version: number;
-    token: number;
-    ssrc: number;
-    name: string;
+    // version: number;
+    // token: number;
+    // ssrc: number;
+    // name: string;
   };
 
   BY: {
     on: OnTransport;
     header: Extract<Command, "BY">;
-    version: number;
-    token: number;
-    ssrc: number;
-    name: string;
+    // version: number;
+    // token: number;
+    // ssrc: number;
+    // name: string;
   };
 
   NO: {
     on: OnTransport;
     header: Extract<Command, "NO">;
-    version: number;
-    token: number;
-    ssrc: number;
-    name: string;
+    // version: number;
+    // token: number;
+    // ssrc: number;
+    // name: string;
   };
 
   CK: {
     header: Extract<Command, "CK">;
-    count: number;
-    ssrc: number;
+    // count: number;
+    // ssrc: number;
     timestamps: RtpTimestamps;
   };
 
   midi: {
     header: AppleMIDICommand;
-    sequence: number;
+    // sequence: number;
     timestamp: number;
-    ssrc: number;
+    // ssrc: number;
     data: ExactlyOneKeyValuePair<MidiData>[];
   };
 };

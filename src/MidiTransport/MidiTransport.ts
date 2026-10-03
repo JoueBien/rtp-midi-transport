@@ -100,8 +100,8 @@ export class MidiTransport implements MidiTransportLike {
         this.send({
           CK: {
             header: "CK",
-            count: 0,
-            ssrc: this.ssrc,
+            // count: 0,
+            // ssrc: this.ssrc,
             timestamps: [timestamp.nowRTP64Bit()],
           },
         });
@@ -109,8 +109,8 @@ export class MidiTransport implements MidiTransportLike {
         this.send({
           CK: {
             header: "CK",
-            count: 0,
-            ssrc: this.ssrc,
+            // count: 0,
+            // ssrc: this.ssrc,
             timestamps: [timestamp.nowRTP64Bit()],
           },
         });
@@ -118,8 +118,8 @@ export class MidiTransport implements MidiTransportLike {
         this.send({
           CK: {
             header: "CK",
-            count: 0,
-            ssrc: this.ssrc,
+            // count: 0,
+            // ssrc: this.ssrc,
             timestamps: [timestamp.nowRTP64Bit()],
           },
         });
@@ -298,18 +298,41 @@ export class MidiTransport implements MidiTransportLike {
   async send<T extends keyof MidiTransportMessageSendParams>(
     msg: Pick<MidiTransportMessageSendParams, T>,
   ) {
-    const messageBuffer = MidiTransportMessage.encode(msg);
-
     if ("midi" in msg) {
+      const { midi } = castMidiTransportMessageSendParamsTo<T, "midi">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        midi: {
+          ...midi,
+          sequence: this.getNextCounterNumber(),
+          ssrc: this.ssrc,
+        },
+      });
       return this.messageClient.send(messageBuffer);
     }
 
     if ("CK" in msg) {
+      const { CK } = castMidiTransportMessageSendParamsTo<T, "CK">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        CK: {
+          ...CK,
+          count: CK.timestamps.length,
+          ssrc: this.ssrc,
+        },
+      });
       return this.messageClient.send(messageBuffer);
     }
 
     if ("IN" in msg) {
       const { IN } = castMidiTransportMessageSendParamsTo<T, "IN">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        IN: {
+          ...IN,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (IN.on === "message") {
         return this.messageClient.send(messageBuffer);
       }
@@ -318,6 +341,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("OK" in msg) {
       const { OK } = castMidiTransportMessageSendParamsTo<T, "OK">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        OK: {
+          ...OK,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (OK.on === "message") {
         return this.messageClient.send(messageBuffer);
       }
@@ -326,6 +358,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("NO" in msg) {
       const { NO } = castMidiTransportMessageSendParamsTo<T, "NO">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        NO: {
+          ...NO,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (NO.on === "message") {
         return this.messageClient.send(messageBuffer);
       }
@@ -334,6 +375,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("BY" in msg) {
       const { BY } = castMidiTransportMessageSendParamsTo<T, "BY">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        BY: {
+          ...BY,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (BY.on === "message") {
         return this.messageClient.send(messageBuffer);
       }
@@ -358,9 +408,17 @@ export class MidiTransport implements MidiTransportLike {
       msg,
       to: { remoteAddress, remotePort },
     } = params;
-    const messageBuffer = MidiTransportMessage.encode<T>(msg);
+    // const messageBuffer = MidiTransportMessage.encode<T>(msg);
 
     if ("midi" in params.msg) {
+      const { midi } = castMidiTransportMessageSendParamsTo<T, "midi">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        midi: {
+          ...midi,
+          sequence: this.getNextCounterNumber(),
+          ssrc: this.ssrc,
+        },
+      });
       return this.messageClient.respond({
         msg: messageBuffer,
         remoteAddress,
@@ -369,6 +427,14 @@ export class MidiTransport implements MidiTransportLike {
     }
 
     if ("CK" in params.msg) {
+      const { CK } = castMidiTransportMessageSendParamsTo<T, "CK">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        CK: {
+          ...CK,
+          count: CK.timestamps.length,
+          ssrc: this.ssrc,
+        },
+      });
       return this.messageClient.respond({
         msg: messageBuffer,
         remoteAddress,
@@ -378,6 +444,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("IN" in params.msg) {
       const { IN } = castMidiTransportMessageSendParamsTo<T, "IN">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        IN: {
+          ...IN,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (IN.on === "message") {
         return this.messageClient.respond({
           msg: messageBuffer,
@@ -394,6 +469,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("OK" in params.msg) {
       const { OK } = castMidiTransportMessageSendParamsTo<T, "OK">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        OK: {
+          ...OK,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (OK.on === "message") {
         return this.messageClient.respond({
           msg: messageBuffer,
@@ -410,6 +494,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("NO" in params.msg) {
       const { NO } = castMidiTransportMessageSendParamsTo<T, "NO">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        NO: {
+          ...NO,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (NO.on === "message") {
         return this.messageClient.respond({
           msg: messageBuffer,
@@ -426,6 +519,15 @@ export class MidiTransport implements MidiTransportLike {
 
     if ("BY" in params.msg) {
       const { BY } = castMidiTransportMessageSendParamsTo<T, "BY">(msg);
+      const messageBuffer = MidiTransportMessage.encode({
+        BY: {
+          ...BY,
+          version: 2,
+          token: this.token,
+          ssrc: this.ssrc,
+          name: this.hardwareName,
+        },
+      });
       if (BY.on === "message") {
         return this.messageClient.respond({
           msg: messageBuffer,

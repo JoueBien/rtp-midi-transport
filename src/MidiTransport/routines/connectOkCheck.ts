@@ -15,10 +15,10 @@ export async function connectOkCheck(transport: MidiTransportLike) {
         IN: {
           on: "control",
           header: "IN",
-          ssrc: transport.ssrc,
-          token: transport.token,
-          version: 2,
-          name: transport.hardwareName,
+          // ssrc: transport.ssrc,
+          // token: transport.token,
+          // version: 2,
+          // name: transport.hardwareName,
         },
       },
       listen: {
@@ -45,10 +45,10 @@ export async function connectOkCheck(transport: MidiTransportLike) {
           IN: {
             on: "message",
             header: "IN",
-            ssrc: transport.ssrc,
-            token: transport.token,
-            version: 2,
-            name: transport.hardwareName,
+            // ssrc: transport.ssrc,
+            // token: transport.token,
+            // version: 2,
+            // name: transport.hardwareName,
           },
         },
         listen: {

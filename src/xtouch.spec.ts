@@ -60,10 +60,10 @@ describe.skip("MidiTransport", () => {
         BY: {
           on: "control",
           header: "BY",
-          version: 2,
-          token: client.token,
-          ssrc: client.ssrc,
-          name: "CTL",
+          // version: 2,
+          // token: client.token,
+          // ssrc: client.ssrc,
+          // name: "CTL",
         },
       });
 
@@ -71,10 +71,10 @@ describe.skip("MidiTransport", () => {
         BY: {
           on: "message",
           header: "BY",
-          version: 2,
-          token: client.token,
-          ssrc: client.ssrc,
-          name: "CTL",
+          // version: 2,
+          // token: client.token,
+          // ssrc: client.ssrc,
+          // name: "CTL",
         },
       });
 

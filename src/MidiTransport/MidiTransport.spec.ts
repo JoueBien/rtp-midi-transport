@@ -65,6 +65,8 @@ describe("MidiTransport", () => {
             decoded: expect.objectContaining({
               CK: expect.objectContaining({
                 header: "CK",
+                ssrc: client.ssrc,
+                count: 0,
                 timestamps: [expect.any(BigInt)],
               }),
             }),
@@ -79,6 +81,8 @@ describe("MidiTransport", () => {
           expect.objectContaining({
             decoded: expect.objectContaining({
               CK: expect.objectContaining({
+                ssrc: server.ssrc,
+                count: 1,
                 header: "CK",
                 timestamps: [expect.any(BigInt), expect.any(BigInt)],
               }),
@@ -95,6 +99,8 @@ describe("MidiTransport", () => {
             decoded: expect.objectContaining({
               CK: expect.objectContaining({
                 header: "CK",
+                ssrc: client.ssrc,
+                count: 2,
                 timestamps: [
                   expect.any(BigInt),
                   expect.any(BigInt),
@@ -123,6 +129,8 @@ describe("MidiTransport", () => {
               CK: expect.objectContaining({
                 header: "CK",
                 timestamps: [expect.any(BigInt)],
+                ssrc: client.ssrc,
+                count: 0,
               }),
             }),
           }),
@@ -135,6 +143,8 @@ describe("MidiTransport", () => {
             decoded: expect.objectContaining({
               CK: expect.objectContaining({
                 header: "CK",
+                ssrc: client.ssrc,
+                count: 2,
                 timestamps: [
                   expect.any(BigInt),
                   expect.any(BigInt),

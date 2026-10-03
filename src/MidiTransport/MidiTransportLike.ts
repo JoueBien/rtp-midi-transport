@@ -12,12 +12,6 @@ import {
 } from "../types";
 
 export interface MidiTransportLike {
-  //  constructor(args: {
-  //  controlClient: Omit<ConstructorParameters<typeof UdpTransport>[0], "cleanUpController">;
-  //  messageClient: Omit<ConstructorParameters<typeof UdpTransport>[0], "cleanUpController">;
-  //  hardwareName: string;
-  //  cleanUpController?: AbortController;
-  //  });
   controlClient: UdpTransport;
   messageClient: UdpTransport;
   eventEmitter: EventEmitterController;
