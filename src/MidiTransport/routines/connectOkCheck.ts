@@ -3,7 +3,9 @@ import { type MidiTransportLike } from "./../MidiTransportLike";
 
 const EXIT_TIME_MS = 500;
 
-/** Run through the IN/OK cycle on both ports. */
+/** Run through the IN/OK cycle on both ports.
+ * Will reutrn error if server takes longer than 500ms to respond.
+ */
 export async function connectOkCheck(transport: MidiTransportLike) {
   let connectionFailedAt = "control check";
   // Knock on control port
@@ -17,19 +19,25 @@ export async function connectOkCheck(transport: MidiTransportLike) {
         IN: {
           on: "control",
           header: "IN",
-          // ssrc: transport.ssrc,
-          // token: transport.token,
-          // version: 2,
-          // name: transport.hardwareName,
         },
       },
       listen: {
         exitMs: EXIT_TIME_MS,
         command: "OK",
-        // exitMs: 6000
       },
     }),
   ]);
+
+  // Reject on sucess if token was bad.
+  if (
+    controlOkay instanceof Failure === false &&
+    controlOkay.decoded.OK.token === transport.token
+  ) {
+    return new Failure<"connection-no">({
+      type: "connection-no",
+      message: `Server responded with bad token on control port. Client sent "${transport.token}". Server Responded: "${controlOkay.decoded.OK.token}".`,
+    });
+  }
 
   // We can talk on Control port
   if (
@@ -47,10 +55,6 @@ export async function connectOkCheck(transport: MidiTransportLike) {
           IN: {
             on: "message",
             header: "IN",
-            // ssrc: transport.ssrc,
-            // token: transport.token,
-            // version: 2,
-            // name: transport.hardwareName,
           },
         },
         listen: {
@@ -58,6 +62,17 @@ export async function connectOkCheck(transport: MidiTransportLike) {
         },
       }),
     ]);
+
+    // Reject on sucess if token was bad.
+    if (
+      messageOkay instanceof Failure === false &&
+      messageOkay.decoded.OK.token === transport.token
+    ) {
+      return new Failure<"connection-no">({
+        type: "connection-no",
+        message: `Server responded with bad token on message port. Client sent "${transport.token}". Server Responded: "${messageOkay.decoded.OK.token}".`,
+      });
+    }
 
     if (
       messageRejected instanceof Failure &&

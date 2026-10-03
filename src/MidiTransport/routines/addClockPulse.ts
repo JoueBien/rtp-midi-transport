@@ -10,8 +10,6 @@ export function addClockPulse(transport: MidiTransportLike) {
       transport.send({
         CK: {
           header: "CK",
-          // count: 0,
-          // ssrc: transport.ssrc,
           timestamps: [timestamp.nowRTP64Bit()],
         },
       });

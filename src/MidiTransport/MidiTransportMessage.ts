@@ -12,8 +12,6 @@ import { encodRtpControl } from "./../encode/encodRtpControl";
 import { encodeRtpClock } from "./../encode/encodeRtpClock";
 import { castMidiTransportMessageParamsTo } from "./../utils/cast/castMidiTransportMessageParamsTo";
 import { decodeAndPopRtpMidi } from "./../decoders/decodeAndPopRtpMidi";
-import { encodeMidiCommandSectionHeader } from "./../encode/encodeMidiCommandSectionHeader";
-import { encodeMidiData } from "./../encode/encodeMidiData";
 import { encodeRtpMidi } from "./../encode/encodeRtpMidi";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
@@ -27,6 +25,7 @@ export const MidiTransportMessage = {
   encode: function encode<T extends keyof MidiTransportMessageParams>(
     params: Pick<MidiTransportMessageParams, T>,
   ) {
+    // Encode midi data.
     if ("midi" in params) {
       const command = castMidiTransportMessageParamsTo<T, "midi">(params);
       return new Uint8Array([
@@ -35,7 +34,7 @@ export const MidiTransportMessage = {
       ]);
     }
 
-    // params.CK
+    // Encode Clock.
     if ("CK" in params) {
       const command = castMidiTransportMessageParamsTo<T, "CK">(params);
       return new Uint8Array([
@@ -44,7 +43,7 @@ export const MidiTransportMessage = {
       ]);
     }
 
-    // Commands
+    // Encode Commands.
     if ("IN" in params) {
       const command = castMidiTransportMessageParamsTo<T, "IN">(params);
       return new Uint8Array([
@@ -84,11 +83,11 @@ export const MidiTransportMessage = {
   decode: function decode(
     messageBuffer: Uint8Array<ArrayBuffer>,
   ): Partial<DecodedMidiTransportMessage> {
-    // Decode RTP header at start of message
+    // Decode RTP header at start of message.
     const { command, unit8Array: unit8Array1 } =
       decodeAndPopRtpHeader(messageBuffer);
 
-    // Decode Midi TODO:
+    // Decode Midi.
     if (command === "midi") {
       const midi = decodeAndPopRtpMidi(unit8Array1);
       console.log("@@@FROM<-", command, messageBuffer);
@@ -101,7 +100,7 @@ export const MidiTransportMessage = {
       };
     }
 
-    // Decode Clock
+    // Decode Clock.
     if (command === "CK") {
       const clock = decodeAndPopRtpClock(unit8Array1);
       return {
@@ -112,7 +111,7 @@ export const MidiTransportMessage = {
       };
     }
 
-    // Decode Commands
+    // Decode Commands.
     if (CONTROL_ONLY_COMMAND.includes(command)) {
       const about = decodeAndPopRtpControl(unit8Array1);
 
