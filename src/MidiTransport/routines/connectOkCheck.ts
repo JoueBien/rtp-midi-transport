@@ -1,6 +1,8 @@
 import { Failure } from "fail-up";
 import { type MidiTransportLike } from "./../MidiTransportLike";
 
+const EXIT_TIME_MS = 500;
+
 /** Run through the IN/OK cycle on both ports. */
 export async function connectOkCheck(transport: MidiTransportLike) {
   let connectionFailedAt = "control check";
@@ -8,7 +10,7 @@ export async function connectOkCheck(transport: MidiTransportLike) {
   const [controlRejected, controlOkay] = await Promise.all([
     transport.waitForMessage({
       command: "NO",
-      exitMs: 2000,
+      exitMs: EXIT_TIME_MS,
     }),
     transport.sendAndWaitForMessage({
       send: {
@@ -22,7 +24,7 @@ export async function connectOkCheck(transport: MidiTransportLike) {
         },
       },
       listen: {
-        exitMs: 2000,
+        exitMs: EXIT_TIME_MS,
         command: "OK",
         // exitMs: 6000
       },
@@ -38,7 +40,7 @@ export async function connectOkCheck(transport: MidiTransportLike) {
     const [messageRejected, messageOkay] = await Promise.all([
       transport.waitForMessage({
         command: "NO",
-        exitMs: 2000,
+        exitMs: EXIT_TIME_MS,
       }),
       transport.sendAndWaitForMessage({
         send: {

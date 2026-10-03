@@ -5,7 +5,6 @@ import {
   delay,
   timestamp,
 } from "@joue-bien/audio-transport";
-import { RemoteInfo } from "dgram";
 import { Failure, Result } from "fail-up";
 import {
   DecodedMidiTransportMessage,

@@ -5,7 +5,15 @@ import { listenAddListnersForAutoOK } from "./routines/listenAddListnersForAutoO
 
 describe("MidiTransport", () => {
   const { advanceTimersByTimeAsync } = setUpFakeTimers({
-    fake: ["fake", "Date", "performance", "setInterval", "clearInterval"],
+    fake: [
+      "fake",
+      "Date",
+      "performance",
+      // "setTimeout",
+      // "clearTimeout",
+      "setInterval",
+      "clearInterval",
+    ],
   });
 
   it(
