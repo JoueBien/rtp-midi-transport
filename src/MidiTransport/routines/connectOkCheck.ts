@@ -31,7 +31,7 @@ export async function connectOkCheck(transport: MidiTransportLike) {
   // Reject on sucess if token was bad.
   if (
     controlOkay instanceof Failure === false &&
-    controlOkay.decoded.OK.token === transport.token
+    controlOkay.decoded.OK.token !== transport.token
   ) {
     return new Failure<"connection-no">({
       type: "connection-no",
@@ -66,7 +66,7 @@ export async function connectOkCheck(transport: MidiTransportLike) {
     // Reject on sucess if token was bad.
     if (
       messageOkay instanceof Failure === false &&
-      messageOkay.decoded.OK.token === transport.token
+      messageOkay.decoded.OK.token !== transport.token
     ) {
       return new Failure<"connection-no">({
         type: "connection-no",

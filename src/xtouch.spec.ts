@@ -2,7 +2,8 @@ import { MidiTransport } from "./MidiTransport/MidiTransport";
 import { MidiTransportUnknownEvent } from "./types";
 import { setUpFakeTimers } from "./utils/setUpFakeTimers";
 import { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
-import { delay } from "@joue-bien/audio-transport";
+import { delay, timestamp } from "@joue-bien/audio-transport";
+import { Failure } from "fail-up";
 
 describe.skip("MidiTransport", () => {
   // beforeEach(() => {
@@ -51,6 +52,52 @@ describe.skip("MidiTransport", () => {
       const floatingClientOkay = await client.connect();
       console.log("@@@CONNECTED", floatingClientOkay);
       expect(floatingClientOkay).toMatchObject(expect.any(AbortController));
+
+      // Turn all buttons on
+      for (let i = 0; i < 104; i++) {
+        await client.send({
+          midi: {
+            header: "midi",
+            timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn),
+            data: [
+              {
+                9: {
+                  channel: 0,
+                  command: 9,
+                  label: "NoteOn",
+                  data: [i, 64],
+                },
+              },
+            ],
+          },
+        });
+        await delay({ ms: 0.05 });
+      }
+
+      // client.send({
+      //   midi: {
+      //     header: "midi",
+      //     timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn) + 30,
+      //     data: [
+      //       {
+      //         9: {
+      //           channel: 0,
+      //           command: 9,
+      //           label: "NoteOn",
+      //           data: [5, 64],
+      //         },
+      //       },
+      //       {
+      //         9: {
+      //           channel: 0,
+      //           command: 9,
+      //           label: "NoteOn",
+      //           data: [6, 64],
+      //         },
+      //       },
+      //     ],
+      //   },
+      // });
 
       await delay({
         ms: 50 * 1000 * 2,
