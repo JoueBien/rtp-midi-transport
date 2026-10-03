@@ -1,7 +1,7 @@
 import { MidiTransport } from "./MidiTransport";
-import { MidiTransportUnknownEvent } from "./types";
-import { setUpFakeTimers } from "./utils/setUpFakeTimers";
-import { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
+import { MidiTransportUnknownEvent } from "./../types";
+import { setUpFakeTimers } from "./../utils/setUpFakeTimers";
+import { listenAddListnersForAutoOK } from "./routines/listenAddListnersForAutoOK";
 
 describe("MidiTransport", () => {
   const { advanceTimersByTimeAsync } = setUpFakeTimers({

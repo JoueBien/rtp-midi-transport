@@ -1,7 +1,7 @@
-import { MidiTransport } from "./MidiTransport";
+import { MidiTransport } from "./MidiTransport/MidiTransport";
 import { MidiTransportUnknownEvent } from "./types";
 import { setUpFakeTimers } from "./utils/setUpFakeTimers";
-import { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
+import { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
 import { delay } from "@joue-bien/audio-transport";
 
 describe.skip("MidiTransport", () => {

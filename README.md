@@ -4,7 +4,7 @@ A TypeScript library for sending MIDI messages over UDP without a driver, in com
 
 # Install
 
-`npm install`
+`npm install  @joue-bien/rtp-midi-transport`
 
 # Documintation
 

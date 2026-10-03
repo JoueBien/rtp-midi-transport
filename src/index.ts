@@ -1,6 +1,6 @@
 // Lib Main
-export { MidiTransport } from "./MidiTransport";
-export { MidiTransportMessage } from "./MidiTransportMessage";
+export { MidiTransport } from "./MidiTransport/MidiTransport";
+export { MidiTransportMessage } from ".//MidiTransport/MidiTransportMessage";
 export type {
   Command,
   AppleMIDICommand,
@@ -13,7 +13,7 @@ export type {
 } from "./types/index";
 
 // Lib Utils
-export { listenAddListnersForAutoOK } from "./utils/listenAddListnersForAutoOK";
+export { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
 export { castMidiTransportEventToAll } from "./utils/cast/castMidiTransportEventToAll";
 export { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
 export { castMidiTransportMessageSendParamsTo } from "./utils/cast/castMidiTransportMessageSendParamsTo";

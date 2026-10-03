@@ -1,20 +1,20 @@
-import { decodeAndPopRtpHeader } from "./decoders/decodeAndPopRtpHeader";
+import { decodeAndPopRtpHeader } from "./../decoders/decodeAndPopRtpHeader";
 import {
   Command,
   AppleMIDICommand,
   MidiTransportMessageParams,
   DecodedMidiTransportMessage,
-} from "./types";
-import { decodeAndPopRtpControl } from "./decoders/decodeAndPopRtpControl";
-import { decodeAndPopRtpClock } from "./decoders/decodeAndPopRtpClock";
-import { encodeRtpHeader } from "./encode/encodeRtpHeader";
-import { encodRtpControl } from "./encode/encodRtpControl";
-import { encodeRtpClock } from "./encode/encodeRtpClock";
-import { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
-import { decodeAndPopRtpMidi } from "./decoders/decodeAndPopRtpMidi";
-import { encodeMidiCommandSectionHeader } from "./encode/encodeMidiCommandSectionHeader";
-import { encodeMidiData } from "./encode/encodeMidiData";
-import { encodeRtpMidi } from "./encode/encodeRtpMidi";
+} from "./../types";
+import { decodeAndPopRtpControl } from "./../decoders/decodeAndPopRtpControl";
+import { decodeAndPopRtpClock } from "./../decoders/decodeAndPopRtpClock";
+import { encodeRtpHeader } from "./../encode/encodeRtpHeader";
+import { encodRtpControl } from "./../encode/encodRtpControl";
+import { encodeRtpClock } from "./../encode/encodeRtpClock";
+import { castMidiTransportMessageParamsTo } from "./../utils/cast/castMidiTransportMessageParamsTo";
+import { decodeAndPopRtpMidi } from "./../decoders/decodeAndPopRtpMidi";
+import { encodeMidiCommandSectionHeader } from "./../encode/encodeMidiCommandSectionHeader";
+import { encodeMidiData } from "./../encode/encodeMidiData";
+import { encodeRtpMidi } from "./../encode/encodeRtpMidi";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",

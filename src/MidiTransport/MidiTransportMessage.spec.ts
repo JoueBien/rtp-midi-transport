@@ -1,6 +1,6 @@
 import { unsignedIntEncoder, timestamp } from "@joue-bien/audio-transport";
 import { MidiTransportMessage } from "./MidiTransportMessage";
-import { encodeRtpHeader } from "./encode/encodeRtpHeader";
+import { encodeRtpHeader } from "./../encode/encodeRtpHeader";
 
 describe("MidiTransportMessage", () => {
   it("encodes and decodes commnds", () => {
