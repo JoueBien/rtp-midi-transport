@@ -4,6 +4,8 @@ import { setUpFakeTimers } from "./utils/setUpFakeTimers";
 import { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
 import { delay, timestamp } from "@joue-bien/audio-transport";
 import { Failure } from "fail-up";
+import { LABEL_TO_MIDI_LOOK_UP } from "./constrains/midiCommands";
+import { castUnsingdInt14ToMidiData } from "./utils/cast/castUnsingdInt14ToMidiData";
 
 describe.skip("MidiTransport", () => {
   // beforeEach(() => {
@@ -65,7 +67,28 @@ describe.skip("MidiTransport", () => {
                   channel: 0,
                   command: 9,
                   label: "NoteOn",
-                  data: [i, 64],
+                  data: [i, 127],
+                },
+              },
+            ],
+          },
+        });
+        await delay({ ms: 0.05 });
+      }
+
+      // Move Faders Half way
+      for (let i = 0; i < 9; i++) {
+        await client.send({
+          midi: {
+            header: "midi",
+            timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn),
+            data: [
+              {
+                [14]: {
+                  channel: i,
+                  command: 14,
+                  label: "PitchBend",
+                  data: castUnsingdInt14ToMidiData(1023),
                 },
               },
             ],
