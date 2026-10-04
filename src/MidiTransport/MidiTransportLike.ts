@@ -8,6 +8,7 @@ import {
   DecodedMidiTransportMessage,
   MidiTransportEvent,
   MidiTransportMessageSendParams,
+  MidiTransportMessageRespondParams,
   MidiTransportUnknownEvent,
 } from "../types";
 
@@ -37,8 +38,8 @@ export interface MidiTransportLike {
   send<T extends keyof MidiTransportMessageSendParams>(
     msg: Pick<MidiTransportMessageSendParams, T>,
   ): Promise<Result<"ok", "aborted" | "not-connected" | "send-failure">>;
-  respond<T extends keyof MidiTransportMessageSendParams>(params: {
-    msg: Pick<MidiTransportMessageSendParams, T>;
+  respond<T extends keyof MidiTransportMessageRespondParams>(params: {
+    msg: Pick<MidiTransportMessageRespondParams, T>;
     to: {
       remotePort: number;
       remoteAddress: string;

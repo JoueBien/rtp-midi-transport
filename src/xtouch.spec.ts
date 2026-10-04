@@ -1,6 +1,6 @@
 import { MidiTransport } from "./MidiTransport/MidiTransport";
 import { MidiTransportUnknownEvent } from "./types";
-import { setUpFakeTimers } from "./utils/setUpFakeTimers";
+import { setUpFakeTimers } from "./utils/testing/setUpFakeTimers";
 import { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
 import { delay, timestamp } from "@joue-bien/audio-transport";
 import { Failure } from "fail-up";
