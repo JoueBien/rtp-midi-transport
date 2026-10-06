@@ -3,7 +3,7 @@ import { MidiTransportMessage } from "./MidiTransportMessage";
 import { encodeRtpHeader } from "./../encode/encodeRtpHeader";
 
 describe("MidiTransportMessage", () => {
-  it("encodes and decodes commnds", () => {
+  it("encodes and decodes commands", () => {
     const res = MidiTransportMessage.decode(
       MidiTransportMessage.encode({
         BY: {

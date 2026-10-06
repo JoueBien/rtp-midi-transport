@@ -29,7 +29,7 @@ export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
   // Pop 3 bytes of padding
   const { unit8Array: unit8Array3 } = decodeAndPopChars(unit8Array2, 3);
 
-  // Decode first timesmap
+  // Decode first timestamp
   const { number: timestamp0, unit8Array: unit8Array4 } =
     decodeAndPopUnsignedInt64Bit(unit8Array3);
 
@@ -43,13 +43,13 @@ export function decodeAndPopRtpClock(unit8Array: Uint8Array<ArrayBuffer>) {
         Uint8Array<ArrayBuffer>,
       ] = [unit8Array4];
 
-  // Decode second timesmap
+  // Decode second timestamp
   if (count > 0) {
     const { number: timestamp1, unit8Array: unit8Array5 } =
       decodeAndPopUnsignedInt64Bit(unit8Array4);
     timestamps.push(timestamp1);
     returnBuffer.push(unit8Array5);
-    // Decode third timesmap
+    // Decode third timestamp
     if (count > 1) {
       const { number: timestamp2, unit8Array: unit8Array6 } =
         decodeAndPopUnsignedInt64Bit(unit8Array5);

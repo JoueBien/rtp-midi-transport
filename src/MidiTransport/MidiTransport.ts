@@ -10,7 +10,6 @@ import {
   DecodedMidiTransportMessage,
   MidiTransportMessageRespondParams,
   MidiTransportMessageSendParams,
-  MidiTransportUnknownEvent,
 } from "./../types";
 import { MidiTransportMessage } from "./MidiTransportMessage";
 import {
@@ -28,14 +27,14 @@ import { castMidiTransportMessageSendParamsTo } from "./../utils/cast/castMidiTr
 import { type MidiTransportLike } from "./MidiTransportLike";
 import { addClockPulse } from "./routines/addClockPulse";
 import { addBaseHandlers } from "./routines/addBaseHandlers";
-import { connectAddListnersForClockSync } from "./routines/connectAddListnersForClockSync";
-import { listenAddListnersForClockSync } from "./routines/listenAddListnersForClockSync";
+import { listenAddListenersForClockSync } from "./routines/listenAddListenersForClockSync";
 import { connectOkCheck } from "./routines/connectOkCheck";
 import { castMidiTransportMessageRespondParamsTo } from "../utils/cast/castMidiTransportMessageRespondParamsTo";
 import {
   MidiTransportAnyEvent,
   MidiTransportSpecificEvent,
 } from "../types/events";
+import { connectAddListenersForClockSync } from "./routines/connectAddListenersForClockSync";
 
 export class MidiTransport implements MidiTransportLike {
   controlClient: UdpTransport;
@@ -93,9 +92,9 @@ export class MidiTransport implements MidiTransportLike {
   async connect(): Promise<
     Result<AbortController, "connection-failed" | "connection-no">
   > {
-    const controllConnected = await this.controlClient.connect();
-    if (controllConnected instanceof Failure) {
-      return controllConnected;
+    const controlConnected = await this.controlClient.connect();
+    if (controlConnected instanceof Failure) {
+      return controlConnected;
     }
 
     const messageConnected = await this.messageClient.connect();
@@ -103,16 +102,16 @@ export class MidiTransport implements MidiTransportLike {
       return messageConnected;
     }
 
-    // Add listners.
+    // Add listeners.
     addBaseHandlers(this);
 
     // Make sure to reply to Clock Requests.
-    connectAddListnersForClockSync(this);
+    connectAddListenersForClockSync(this);
 
     // Run OK Check procedure.
     const okayCheckRes = await connectOkCheck(this);
 
-    // Send 3 Clock Sycns every 200ms.
+    // Send 3 Clock Syncs every 200ms.
     if (okayCheckRes === "ok") {
       (async () => {
         this.send({
@@ -145,23 +144,23 @@ export class MidiTransport implements MidiTransportLike {
 
   /**  Listen on single port */
   async listen(): Promise<Result<AbortController, "listen-failed">> {
-    const [controllConnected, messageConnected] = [
+    const [controlConnected, messageConnected] = [
       await this.controlClient.listen(),
       await this.messageClient.listen(),
     ];
 
-    if (controllConnected instanceof Failure) {
-      return controllConnected;
+    if (controlConnected instanceof Failure) {
+      return controlConnected;
     }
     if (messageConnected instanceof Failure) {
       return messageConnected;
     }
 
-    // Add listners.
+    // Add listeners.
     addBaseHandlers(this);
 
     // Make sure to reply to Clock Requests.
-    listenAddListnersForClockSync(this);
+    listenAddListenersForClockSync(this);
 
     return this.cleanUpController;
   }
@@ -444,7 +443,7 @@ export class MidiTransport implements MidiTransportLike {
 
     return new Failure<"send-failure">({
       type: "send-failure",
-      message: `Faailed to send message with input of ${JSON.stringify(msg, null, 2)}.`,
+      message: `Failed to send message with input of ${JSON.stringify(msg, null, 2)}.`,
     });
   }
 

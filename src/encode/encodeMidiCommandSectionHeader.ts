@@ -22,7 +22,7 @@ export function encodeMidiCommandSectionHeader(params: {
   timestamps: boolean;
   /**
    * | P |
-   * Original used midi repeate command status. */
+   * Original used midi repeat command status. */
   runningStatus: boolean;
   /** | LEN |
    * Size of the midi list message in bytes. This also sets | B |

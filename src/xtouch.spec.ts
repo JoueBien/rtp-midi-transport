@@ -1,11 +1,11 @@
 import { MidiTransport } from "./MidiTransport/MidiTransport";
 import { MidiTransportUnknownEvent } from "./types";
 import { setUpFakeTimers } from "./utils/testing/setUpFakeTimers";
-import { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
+import { listenAddListenersForAutoOK } from "./MidiTransport/routines/listenAddListenersForAutoOK";
 import { delay, timestamp } from "@joue-bien/audio-transport";
 import { Failure } from "fail-up";
 import { LABEL_TO_MIDI_LOOK_UP } from "./constrains/midiCommands";
-import { castUnsingdInt14ToMidiData } from "./utils/cast/castUnsingdInt14ToMidiData";
+import { castUnsignedInt14ToMidiData } from "./utils/cast/castUnsignedInt14ToMidiData";
 
 describe.skip("MidiTransport", () => {
   // beforeEach(() => {
@@ -88,7 +88,7 @@ describe.skip("MidiTransport", () => {
                   channel: i,
                   command: 14,
                   label: "PitchBend",
-                  data: castUnsingdInt14ToMidiData(1023),
+                  data: castUnsignedInt14ToMidiData(1023),
                 },
               },
             ],

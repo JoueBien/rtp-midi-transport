@@ -12,6 +12,6 @@ export type {
 } from "./types/index";
 
 // Lib Utils
-export { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
+export { listenAddListenersForAutoOK } from "./MidiTransport/routines/listenAddListenersForAutoOK";
 export { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
 export { castMidiTransportMessageSendParamsTo } from "./utils/cast/castMidiTransportMessageSendParamsTo";

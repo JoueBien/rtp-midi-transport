@@ -45,23 +45,23 @@ export function decodeAndPopMidiDataList(params: {
 } {
   const { unit8Array, messageByteLength } = params;
 
-  // Set up extraction datal
+  // Set up extraction data
   let counter = messageByteLength; // Keep Track of how many bytes we have left.
   let depthStop = messageByteLength; // Don't enter an endless loop - stop at 1 times the byte length.
-  const vaules: ExactlyOneKeyValuePair<MidiData>[] = [];
+  const values: ExactlyOneKeyValuePair<MidiData>[] = [];
   let unit8ArrayWorking = unit8Array; // Keep updating the array.
-  let encountedFailure = false;
+  let encounteredFailure = false;
 
-  // Keep processing messages untill we run out of messages.
+  // Keep processing messages until we run out of messages.
   while (depthStop > 0 && counter > 0) {
     const {
-      vaule: vauleItem,
+      value: valueItem,
       unit8Array: unit8ArrayNext,
       popped,
     } = decodeAndPopMidiData(unit8ArrayWorking);
-    vaules.push(vauleItem);
+    values.push(valueItem);
     if (popped === 0) {
-      encountedFailure = true;
+      encounteredFailure = true;
       break;
     }
     unit8ArrayWorking = unit8ArrayNext;
@@ -70,14 +70,14 @@ export function decodeAndPopMidiDataList(params: {
   }
 
   return {
-    data: vaules,
+    data: values,
     unit8Array: unit8ArrayWorking,
-    popped: encountedFailure === true ? 0 : vaules.length,
+    popped: encounteredFailure === true ? 0 : values.length,
   };
 }
 
 export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
-  vaule: ExactlyOneKeyValuePair<MidiData>;
+  value: ExactlyOneKeyValuePair<MidiData>;
   unit8Array: Uint8Array<ArrayBuffer>;
   popped: number;
 } {
@@ -89,7 +89,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   // Short channel commands
   if (command < 241) {
-    // Get command and channe type
+    // Get command and channel type
     const commandSection = SBitsArray.from(commandByte);
 
     const commandBits = SBitsArray.fromSBits(commandSection.slice(0, 4));
@@ -107,7 +107,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 8) {
       const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           8: {
             command: 8,
             channel,
@@ -123,7 +123,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 9) {
       const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           9: {
             command: 9,
             channel,
@@ -138,7 +138,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 10) {
       const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           10: {
             command: 10,
             channel,
@@ -154,7 +154,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 11) {
       const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           11: {
             command: 11,
             channel,
@@ -169,7 +169,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 12) {
       const { data, unit8Array: unit8ArrayNext } = popData2Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           12: {
             command: 12,
             channel,
@@ -184,7 +184,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 13) {
       const { data, unit8Array: unit8ArrayNext } = popData2Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           13: {
             command: 13,
             channel,
@@ -199,7 +199,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     if (channelCommand === 14) {
       const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
       return {
-        vaule: {
+        value: {
           14: {
             command: 14,
             channel,
@@ -226,7 +226,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
     });
 
     return {
-      vaule: {
+      value: {
         240: {
           command: 240,
           label: "SystemExclusiveStart",
@@ -242,7 +242,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
   if (command === 241) {
     const { data, unit8Array: unit8ArrayNext } = popData2Byte(unit8Array1);
     return {
-      vaule: {
+      value: {
         241: {
           command: 241,
           label: "TimeCodeQuarterFrame",
@@ -257,7 +257,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
   if (command === 242) {
     const { data, unit8Array: unit8ArrayNext } = popData3Byte(unit8Array1);
     return {
-      vaule: {
+      value: {
         242: {
           command: 242,
           label: "SongPositionPointer",
@@ -272,7 +272,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
   if (command === 243) {
     const { data, unit8Array: unit8ArrayNext } = popData2Byte(unit8Array1);
     return {
-      vaule: {
+      value: {
         243: {
           command: 243,
           label: "SongSelect",
@@ -286,7 +286,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 246) {
     return {
-      vaule: {
+      value: {
         246: {
           command: 246,
           label: "TuneRequest",
@@ -299,7 +299,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 248) {
     return {
-      vaule: {
+      value: {
         248: {
           command: 248,
           label: "TimingClock",
@@ -312,7 +312,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 250) {
     return {
-      vaule: {
+      value: {
         250: {
           command: 250,
           label: "Start",
@@ -325,7 +325,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 251) {
     return {
-      vaule: {
+      value: {
         251: {
           command: 251,
           label: "Continue",
@@ -338,7 +338,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 252) {
     return {
-      vaule: {
+      value: {
         252: {
           command: 252,
           label: "Stop",
@@ -351,7 +351,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 254) {
     return {
-      vaule: {
+      value: {
         254: {
           command: 254,
           label: "ActiveSensing",
@@ -364,7 +364,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 255) {
     return {
-      vaule: {
+      value: {
         255: {
           command: 255,
           label: "SystemReset",
@@ -378,7 +378,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
   // Undefined
   if (command === 244) {
     return {
-      vaule: {
+      value: {
         244: {
           command: 244,
           label: "Undefined",
@@ -391,7 +391,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 245) {
     return {
-      vaule: {
+      value: {
         245: {
           command: 245,
           label: "Undefined",
@@ -404,7 +404,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 249) {
     return {
-      vaule: {
+      value: {
         249: {
           command: 249,
           label: "Undefined",
@@ -417,7 +417,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   if (command === 253) {
     return {
-      vaule: {
+      value: {
         253: {
           command: 253,
           label: "Undefined",
@@ -430,7 +430,7 @@ export function decodeAndPopMidiData(unit8Array: Uint8Array<ArrayBuffer>): {
 
   // Fail Mode
   return {
-    vaule: {
+    value: {
       253: {
         command: 253,
         label: "Undefined",

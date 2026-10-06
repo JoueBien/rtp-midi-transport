@@ -13,7 +13,7 @@ import { SBitsArray } from "@joue-bien/audio-transport";
  */
 export const APPLE_MIDI_HEADER = SBitsArray.from(["10000000", "11100001"]);
 
-/** Padding for each command RTP controll packets. */
+/** Padding for each command RTP control packets. */
 export const RTP_HEADER_PADDING = SBitsArray.from(["11111111", "11111111"]);
 
 export const BUFFER_PADDING = {

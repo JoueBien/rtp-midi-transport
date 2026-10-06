@@ -11,7 +11,7 @@ export function encodeRtpMidi(params: {
   data: ExactlyOneKeyValuePair<MidiData>[];
 }) {
   const { sequence, timestamp, ssrc, data } = params;
-  const mididList = encodeMidiData(data);
+  const midiList = encodeMidiData(data);
 
   return new Uint8Array([
     // 16 bit sequence
@@ -24,8 +24,8 @@ export function encodeRtpMidi(params: {
       journal: false,
       timestamps: false,
       runningStatus: false,
-      messageByteLength: mididList.length,
+      messageByteLength: midiList.length,
     }),
-    ...mididList,
+    ...midiList,
   ]);
 }

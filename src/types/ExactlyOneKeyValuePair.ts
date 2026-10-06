@@ -1,4 +1,4 @@
-/** Allow only one key vaule pair from an object.
+/** Allow only one key value pair from an object.
  * @example
  * ```ts
  * type Single = ExactlyOneKeyValuePair<{a: 1, b:2}>

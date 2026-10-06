@@ -1,10 +1,10 @@
-import { encodRtpControl } from "../encode/encodRtpControl";
+import { encodeRtpControl } from "../encode/encodeRtpControl";
 import { decodeAndPopRtpControl } from "./decodeAndPopRtpControl";
 
 describe("decodeAndPopRtpControl", () => {
-  it("decodes an encooded value", () => {
+  it("decodes an encodes value", () => {
     const res = decodeAndPopRtpControl(
-      encodRtpControl({
+      encodeRtpControl({
         version: 2,
         token: 568900,
         ssrc: 100232,

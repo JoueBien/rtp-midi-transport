@@ -34,9 +34,9 @@ export type DecodeMidiCommandSectionHeader = {
   timestamps: boolean;
   /**
    * | P |
-   * Original used midi repeate command. */
+   * Original used midi repeat command. */
   runningStatus: boolean;
-  /** The rest of the message incuding the midi and journal section. */
+  /** The rest of the message including the midi and journal section. */
   unit8Array: Uint8Array<ArrayBuffer>;
 };
 

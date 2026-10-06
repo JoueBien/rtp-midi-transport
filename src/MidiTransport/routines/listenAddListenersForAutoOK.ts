@@ -1,12 +1,12 @@
-import { type MidiTransportLike } from "./../MidiTransportLike";
+import { type MidiTransportLike } from "../MidiTransportLike";
 
 /**
- * For testing set up the server to auto reply as OK when it recieves a IN message.
+ * For testing set up the server to auto reply as OK when it receives a IN message.
  *
  * @example ```ts
  *
  * // Listen for connections on server
- * listenAddListnersForAutoOK(server);
+ * listenAddListenersForAutoOK(server);
  * await server.listen();
  *
  * // Then connect with client
@@ -14,7 +14,7 @@ import { type MidiTransportLike } from "./../MidiTransportLike";
  * ```
  *
  */
-export function listenAddListnersForAutoOK(server: MidiTransportLike) {
+export function listenAddListenersForAutoOK(server: MidiTransportLike) {
   server.onMessage({
     command: "IN",
     callBack: async (event) => {

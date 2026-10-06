@@ -24,7 +24,7 @@ export const LABEL_TO_MIDI_LOOK_UP: Record<MidiLabel, number> = {
   SystemExclusiveStart: 240,
   SystemExclusiveEnd: 247,
 
-  /** Here to exaust types. DO NOT USE to look up. */
+  /** Here to exhaust types. DO NOT USE to look up. */
   Undefined: 253,
 };
 
@@ -102,7 +102,7 @@ export function commandToLabel(command: number): MidiLabel {
 }
 
 /** Look up MIDI command and get string back.
- * If your exacution path handles "Undefined" commands you must set returnUndefinedAs to a vaule.
+ * If your execution path handles "Undefined" commands you must set returnUndefinedAs to a vaule.
  */
 export function labelToCommand(
   command: MidiLabel,

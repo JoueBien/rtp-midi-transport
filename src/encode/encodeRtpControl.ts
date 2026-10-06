@@ -1,6 +1,6 @@
 import { unsignedIntEncoder, stringEncoder } from "@joue-bien/audio-transport";
 
-export function encodRtpControl(params: {
+export function encodeRtpControl(params: {
   version: number;
   token: number;
   ssrc: number;

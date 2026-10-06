@@ -1,7 +1,3 @@
-import { DecodedMidiTransportMessage, OnTransport } from "../types";
-import { RemoteInfo } from "dgram";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
-
 /** General Messages */
 export const EMIT_MESSAGE_IN = "message_in";
 export const EMIT_MESSAGE_CK = "message_ck";

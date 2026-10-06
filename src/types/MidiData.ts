@@ -1,4 +1,4 @@
-/** Human redable labels for MIDI command bytes. */
+/** Human readable labels for MIDI command bytes. */
 export type MidiLabel =
   | "NoteOff"
   | "NoteOn"
@@ -50,7 +50,7 @@ export type MidiChannelData2Byte<Label, Command> = {
   channel: number;
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: Command;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: Label;
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.
@@ -68,7 +68,7 @@ export type AnyMidiChannelData2Byte = MidiChannelData2Byte<
 export type MidiCommandData3Byte<Label, Command> = {
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: Command;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: Label;
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.
@@ -86,7 +86,7 @@ export type AnyMidiCommandData3Byte = MidiCommandData3Byte<
 export type MidiCommandData2Byte<Label, Command> = {
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: Command;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: Label;
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.
@@ -104,7 +104,7 @@ export type AnyMidiCommandData2Byte = MidiCommandData2Byte<
 export type MidiCommandData1Byte<Label, Command> = {
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: Command;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: Label;
 };
 
@@ -133,7 +133,7 @@ export type AnyMidiCommandData1Byte = MidiCommandData1Byte<
 export type MidiCommandDataSysEx = {
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: 240;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: "SystemExclusiveStart";
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.

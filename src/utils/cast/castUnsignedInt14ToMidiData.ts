@@ -1,7 +1,7 @@
 import { intEncoder, SBitsArray } from "@joue-bien/audio-transport";
 
-/** Encode a inot into two midi data. Commonly used for fader vaules. */
-export function castUnsingdInt14ToMidiData(num: number): [number, number] {
+/** Encode a inot into two midi data. Commonly used for fader values. */
+export function castUnsignedInt14ToMidiData(num: number): [number, number] {
   const unit8Array = intEncoder.encode16Bit(num);
 
   const bits = SBitsArray.from(unit8Array);

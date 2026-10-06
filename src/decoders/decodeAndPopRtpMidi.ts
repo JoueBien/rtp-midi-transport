@@ -8,7 +8,7 @@ import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
 import { MidiData } from "../types/MidiData";
 
 export type DecodedRrpMidiMessage = {
-  /** 16 Bit seqience number of Midi Message. */
+  /** 16 Bit sequence number of Midi Message. */
   sequence: number;
   /** 32 Bit timestamp of when the action happened. */
   timestamp: number;
@@ -22,13 +22,13 @@ export type DecodedRrpMidiMessage = {
    * true - denotes if the midi list includes 4 byte timestamps before each Midi command in the MIDI List.
    * (1-4 octets long, or 0 octets if Z = 0).*/
   timestamps: boolean;
-  /** Original used midi repeate command. */
+  /** Original used midi repeat command. */
   runningStatus: boolean;
   /** Midi Messages. */
   data: ExactlyOneKeyValuePair<MidiData>[];
   /** The next part of the buffer (empty or journal). */
   unit8Array: Uint8Array<ArrayBuffer>;
-  /** How man bytes were poped for just the midi data. */
+  /** How man bytes were popped for just the midi data. */
   popped: number;
 };
 

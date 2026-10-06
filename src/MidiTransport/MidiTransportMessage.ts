@@ -8,11 +8,11 @@ import {
 import { decodeAndPopRtpControl } from "./../decoders/decodeAndPopRtpControl";
 import { decodeAndPopRtpClock } from "./../decoders/decodeAndPopRtpClock";
 import { encodeRtpHeader } from "./../encode/encodeRtpHeader";
-import { encodRtpControl } from "./../encode/encodRtpControl";
 import { encodeRtpClock } from "./../encode/encodeRtpClock";
 import { castMidiTransportMessageParamsTo } from "./../utils/cast/castMidiTransportMessageParamsTo";
 import { decodeAndPopRtpMidi } from "./../decoders/decodeAndPopRtpMidi";
 import { encodeRtpMidi } from "./../encode/encodeRtpMidi";
+import { encodeRtpControl } from "../encode/encodeRtpControl";
 
 const CONTROL_ONLY_COMMAND: (Command | AppleMIDICommand)[] = [
   "OK",
@@ -48,7 +48,7 @@ export const MidiTransportMessage = {
       const command = castMidiTransportMessageParamsTo<T, "IN">(params);
       return new Uint8Array([
         ...encodeRtpHeader({ command: "IN" }),
-        ...encodRtpControl(command.IN),
+        ...encodeRtpControl(command.IN),
       ]);
     }
 
@@ -56,7 +56,7 @@ export const MidiTransportMessage = {
       const command = castMidiTransportMessageParamsTo<T, "OK">(params);
       return new Uint8Array([
         ...encodeRtpHeader({ command: "OK" }),
-        ...encodRtpControl(command.OK),
+        ...encodeRtpControl(command.OK),
       ]);
     }
 
@@ -64,7 +64,7 @@ export const MidiTransportMessage = {
       const command = castMidiTransportMessageParamsTo<T, "NO">(params);
       return new Uint8Array([
         ...encodeRtpHeader({ command: "NO" }),
-        ...encodRtpControl(command.NO),
+        ...encodeRtpControl(command.NO),
       ]);
     }
 
@@ -72,7 +72,7 @@ export const MidiTransportMessage = {
       const command = castMidiTransportMessageParamsTo<T, "BY">(params);
       return new Uint8Array([
         ...encodeRtpHeader({ command: "BY" }),
-        ...encodRtpControl(command.BY),
+        ...encodeRtpControl(command.BY),
       ]);
     }
 

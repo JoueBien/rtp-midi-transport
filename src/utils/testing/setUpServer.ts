@@ -1,5 +1,5 @@
 import { MidiTransport } from "../../MidiTransport/MidiTransport";
-import { listenAddListnersForAutoOK } from "../../MidiTransport/routines/listenAddListnersForAutoOK";
+import { listenAddListenersForAutoOK } from "../../MidiTransport/routines/listenAddListenersForAutoOK";
 
 /** Set up a server for a test with everything we need to test a client.
  * Will automatically accept any client.
@@ -39,7 +39,7 @@ export function setUpServer(args?: {
     });
     // Set up auto Reply as OK and start server.
 
-    listenAddListnersForAutoOK(server);
+    listenAddListenersForAutoOK(server);
   });
 
   // Make sure we clean up.

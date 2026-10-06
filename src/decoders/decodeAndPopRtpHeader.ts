@@ -22,10 +22,10 @@ export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {
 
   /** Check to see if Apple MIDI header.
    * @note
-   * Checking if All bits are Apple midi is not implmented. We just check if 2 is in the first two bits.
+   * Checking if All bits are Apple midi is not implemented. We just check if 2 is in the first two bits.
    * @note
-   * The X-Tuch sends an M value of 0 which is not standard.
-   * To check ognoreing the M value we can check bits 0-7 and 9-15 match what we expect.*/
+   * The X-Touch sends an M value of 0 which is not standard.
+   * To check  the M value we can check bits 0-7 and 9-15 match what we expect.*/
   if (
     !RTP_HEADER_PADDING.equals(bitsArray, { from: 0, to: 7 }) &&
     APPLE_MIDI_HEADER.equals(bitsArray, { from: 0, to: 1 })
@@ -43,8 +43,8 @@ export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {
       to: 15,
     })
   ) {
-    const dirtyCommnad = decodeAndPopChars(first32Bits, 4).str.slice(2);
-    const command = checkCommand(dirtyCommnad);
+    const dirtyCommand = decodeAndPopChars(first32Bits, 4).str.slice(2);
+    const command = checkCommand(dirtyCommand);
     return {
       command,
       unit8Array,

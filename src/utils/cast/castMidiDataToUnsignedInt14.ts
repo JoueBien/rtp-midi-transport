@@ -3,7 +3,7 @@ import {
   SBitsArray,
 } from "@joue-bien/audio-transport";
 
-/** Decode two midi data points into a single int. Commonly used for fader vaules. */
+/** Decode two midi data points into a single int. Commonly used for fader values. */
 export function castMidiDataToUnsignedInt14(input: [number, number]) {
   const rawBits = SBitsArray.from(Uint8Array.from(input));
   const bits = new SBitsArray(0);
