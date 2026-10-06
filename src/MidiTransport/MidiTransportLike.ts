@@ -24,15 +24,18 @@ export interface MidiTransportLike {
   token: number;
   ssrc: number;
 
-  // State Checks
+  // State Checks.
   isListeningOk(): Promise<Result<"ok", "aborted" | "not-listening">>;
   isConnectionOk(): Promise<Result<"ok", "aborted" | "not-connected">>;
 
-  // Start connections
+  // Start connections.
   connect(): Promise<
     Result<AbortController, "connection-failed" | "connection-no">
   >;
   listen(): Promise<Result<AbortController, "listen-failed">>;
+
+  // Clean up.
+  deconstructor(): void;
 
   // Send messages.
   send<T extends keyof MidiTransportMessageSendParams>(

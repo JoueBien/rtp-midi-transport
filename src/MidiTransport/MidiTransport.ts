@@ -72,6 +72,10 @@ export class MidiTransport implements MidiTransportLike {
     });
   }
 
+  deconstructor() {
+    this.cleanUpController.abort();
+  }
+
   /** Connect and add a single listener so we only decode once. */
   async connect(): Promise<
     Result<AbortController, "connection-failed" | "connection-no">
@@ -200,6 +204,10 @@ export class MidiTransport implements MidiTransportLike {
     );
     return cleanUp;
   }
+
+  // onMidiMessage (params: {
+  //   callBack: (event: MidiTransportEvent<"midi">) => void;
+  // }) {}
 
   /**
    * Wait for a message with an address.
