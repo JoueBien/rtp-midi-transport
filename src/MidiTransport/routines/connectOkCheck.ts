@@ -4,7 +4,7 @@ import { type MidiTransportLike } from "./../MidiTransportLike";
 const EXIT_TIME_MS = 500;
 
 /** Run through the IN/OK cycle on both ports.
- * Will reutrn error if server takes longer than 500ms to respond.
+ * Will return error if server takes longer than 500ms to respond.
  */
 export async function connectOkCheck(transport: MidiTransportLike) {
   let connectionFailedAt = "control check";
@@ -28,14 +28,14 @@ export async function connectOkCheck(transport: MidiTransportLike) {
     }),
   ]);
 
-  // Reject on sucess if token was bad.
+  // Reject on success if token was bad.
   if (
     controlOkay instanceof Failure === false &&
-    controlOkay.decoded.OK.token !== transport.token
+    controlOkay.decoded.token !== transport.token
   ) {
     return new Failure<"connection-no">({
       type: "connection-no",
-      message: `Server responded with bad token on control port. Client sent "${transport.token}". Server Responded: "${controlOkay.decoded.OK.token}".`,
+      message: `Server responded with bad token on control port. Client sent "${transport.token}". Server Responded: "${controlOkay.decoded.token}".`,
     });
   }
 
@@ -63,14 +63,14 @@ export async function connectOkCheck(transport: MidiTransportLike) {
       }),
     ]);
 
-    // Reject on sucess if token was bad.
+    // Reject on success if token was bad.
     if (
       messageOkay instanceof Failure === false &&
-      messageOkay.decoded.OK.token !== transport.token
+      messageOkay.decoded.token !== transport.token
     ) {
       return new Failure<"connection-no">({
         type: "connection-no",
-        message: `Server responded with bad token on message port. Client sent "${transport.token}". Server Responded: "${messageOkay.decoded.OK.token}".`,
+        message: `Server responded with bad token on message port. Client sent "${transport.token}". Server Responded: "${messageOkay.decoded.token}".`,
       });
     }
 
@@ -83,12 +83,12 @@ export async function connectOkCheck(transport: MidiTransportLike) {
     transport.cleanUpController.abort();
     return new Failure<"connection-no">({
       type: "connection-no",
-      message: "Server message port replyed with NO or did not respond",
+      message: "Server message port replied with NO or did not respond.",
     });
   }
   transport.cleanUpController.abort();
   return new Failure<"connection-no">({
     type: "connection-no",
-    message: `Server control port replyed with no or did not respond. Failed at Stage: ${connectionFailedAt}.`,
+    message: `Server control port replied with no or did not respond. Failed at Stage: ${connectionFailedAt}.`,
   });
 }

@@ -2,14 +2,24 @@ import { RemoteInfo } from "dgram";
 import { type MidiTransportLike } from "./../MidiTransportLike";
 import { MidiTransportUnknownEvent } from "../../types";
 import { MidiTransportMessage } from "./../MidiTransportMessage";
-import { EMIT_ERROR, EMIT_MESSAGE } from "../../constrains/message";
+import {
+  EMIT_ERROR,
+  EMIT_MESSAGE_ALL,
+  EMIT_MESSAGE_BY,
+  EMIT_MESSAGE_CK,
+  EMIT_MESSAGE_FB,
+  EMIT_MESSAGE_IN,
+  EMIT_MESSAGE_MIDI,
+  EMIT_MESSAGE_NO,
+  EMIT_MESSAGE_OK,
+} from "../../constrains/message";
 import { Failure } from "fail-up";
 
 /** Add handlers to listen for events on both ports.
- * These listners are sutable for both client and server.
+ * These listeners are suitable for both client and server.
  */
 export function addBaseHandlers(transport: MidiTransportLike) {
-  // Add listners
+  // Add listeners
   transport.controlClient.onMessage((msg: Buffer, rinfo: RemoteInfo) => {
     const data: MidiTransportUnknownEvent = {
       msg,
@@ -17,7 +27,40 @@ export function addBaseHandlers(transport: MidiTransportLike) {
       on: "control",
       rinfo,
     };
-    transport.eventEmitter.emit(EMIT_MESSAGE, data);
+
+    if ("IN" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_IN, {
+        ...data,
+        decoded: data.decoded.IN,
+      });
+    }
+    if ("OK" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_OK, {
+        ...data,
+        decoded: data.decoded.OK,
+      });
+    }
+    if ("NO" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_NO, {
+        ...data,
+        decoded: data.decoded.NO,
+      });
+    }
+    if ("BY" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_BY, {
+        ...data,
+        decoded: data.decoded.BY,
+      });
+    }
+
+    transport.eventEmitter.emit(EMIT_MESSAGE_ALL, data);
+
+    if ("FB" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_FB, {
+        ...data,
+        decoded: data.decoded.FB,
+      });
+    }
   });
 
   transport.controlClient.onError((err: Failure<"on-error">) => {
@@ -32,7 +75,53 @@ export function addBaseHandlers(transport: MidiTransportLike) {
       rinfo,
     };
 
-    transport.eventEmitter.emit(EMIT_MESSAGE, data);
+    if ("MIDI" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_MIDI, {
+        ...data,
+        decoded: data.decoded.midi,
+      });
+    }
+
+    if ("IN" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_IN, {
+        ...data,
+        decoded: data.decoded.IN,
+      });
+    }
+    if ("OK" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_OK, {
+        ...data,
+        decoded: data.decoded.OK,
+      });
+    }
+    if ("NO" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_NO, {
+        ...data,
+        decoded: data.decoded.NO,
+      });
+    }
+    if ("BY" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_BY, {
+        ...data,
+        decoded: data.decoded.BY,
+      });
+    }
+
+    if ("CK" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_CK, {
+        ...data,
+        decoded: data.decoded.CK,
+      });
+    }
+
+    transport.eventEmitter.emit(EMIT_MESSAGE_ALL, data);
+
+    if ("FB" in data.decoded) {
+      transport.eventEmitter.emit(EMIT_MESSAGE_FB, {
+        ...data,
+        decoded: data.decoded.FB,
+      });
+    }
   });
 
   transport.messageClient.onError((err: Failure<"on-error">) => {

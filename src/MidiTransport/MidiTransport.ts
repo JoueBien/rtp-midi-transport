@@ -8,13 +8,22 @@ import {
 import { Failure, Result } from "fail-up";
 import {
   DecodedMidiTransportMessage,
-  MidiTransportEvent,
   MidiTransportMessageRespondParams,
   MidiTransportMessageSendParams,
   MidiTransportUnknownEvent,
 } from "./../types";
 import { MidiTransportMessage } from "./MidiTransportMessage";
-import { EMIT_ERROR, EMIT_MESSAGE } from "./../constrains/message";
+import {
+  EMIT_ERROR,
+  EMIT_MESSAGE_ALL,
+  EMIT_MESSAGE_BY,
+  EMIT_MESSAGE_CK,
+  EMIT_MESSAGE_FB,
+  EMIT_MESSAGE_IN,
+  EMIT_MESSAGE_MIDI,
+  EMIT_MESSAGE_NO,
+  EMIT_MESSAGE_OK,
+} from "./../constrains/message";
 import { castMidiTransportMessageSendParamsTo } from "./../utils/cast/castMidiTransportMessageSendParamsTo";
 import { type MidiTransportLike } from "./MidiTransportLike";
 import { addClockPulse } from "./routines/addClockPulse";
@@ -23,6 +32,10 @@ import { connectAddListnersForClockSync } from "./routines/connectAddListnersFor
 import { listenAddListnersForClockSync } from "./routines/listenAddListnersForClockSync";
 import { connectOkCheck } from "./routines/connectOkCheck";
 import { castMidiTransportMessageRespondParamsTo } from "../utils/cast/castMidiTransportMessageRespondParamsTo";
+import {
+  MidiTransportAnyEvent,
+  MidiTransportSpecificEvent,
+} from "../types/events";
 
 export class MidiTransport implements MidiTransportLike {
   controlClient: UdpTransport;
@@ -154,13 +167,13 @@ export class MidiTransport implements MidiTransportLike {
   }
 
   /** Add a listener to listen for all messages. */
-  onAnyMessage(callBack: (event: MidiTransportUnknownEvent) => void) {
-    return this.eventEmitter.listen(EMIT_MESSAGE, callBack);
+  onAnyMessage(callBack: (event: MidiTransportAnyEvent) => void) {
+    return this.eventEmitter.listen(EMIT_MESSAGE_ALL, callBack);
   }
 
   /** Add a listener to listen for any message once. */
-  onOnceAnyMessage(callBack: (event: MidiTransportUnknownEvent) => void) {
-    return this.eventEmitter.listenOnce(EMIT_MESSAGE, callBack);
+  onOnceAnyMessage(callBack: (event: MidiTransportAnyEvent) => void) {
+    return this.eventEmitter.listenOnce(EMIT_MESSAGE_ALL, callBack);
   }
 
   /** Add a listener to listen for all errors. */
@@ -176,38 +189,74 @@ export class MidiTransport implements MidiTransportLike {
   /** Add a listener to listen for a messages with an address. */
   onMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportEvent<T>) => void;
+    callBack: (event: MidiTransportSpecificEvent<T>) => void;
   }) {
-    return this.eventEmitter.listen(
-      EMIT_MESSAGE,
-      (event: MidiTransportEvent<T>) => {
-        if (params.command in event.decoded) {
-          return params.callBack(event);
-        }
-      },
-    );
+    const { command, callBack } = params;
+    if (command === "midi") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_MIDI, callBack);
+    }
+
+    if (command === "IN") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_IN, callBack);
+    }
+    if (command === "CK") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_CK, callBack);
+    }
+    if (command === "OK") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_OK, callBack);
+    }
+    if (command === "BY") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_BY, callBack);
+    }
+    if (command === "NO") {
+      return this.eventEmitter.listen(EMIT_MESSAGE_NO, callBack);
+    }
+
+    return this.eventEmitter.listen(EMIT_MESSAGE_FB, callBack);
   }
 
   /** Add a listener to listen for a message with an address once.*/
   onOnceMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportEvent<T>) => void;
+    callBack: (event: MidiTransportSpecificEvent<T>) => void;
   }) {
-    const cleanUp = this.eventEmitter.listen(
-      EMIT_MESSAGE,
-      (event: MidiTransportEvent<T>) => {
-        if (params.command in event.decoded) {
-          cleanUp();
-          return params.callBack(event);
-        }
-      },
-    );
+    const { command, callBack } = params;
+    let cleanUp = () => {};
+    function action(event: MidiTransportSpecificEvent<T>) {
+      cleanUp();
+      return callBack(event);
+    }
+
+    if (command === "midi") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_MIDI, action);
+      return cleanUp;
+    }
+
+    if (command === "IN") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_IN, action);
+      return cleanUp;
+    }
+    if (command === "CK") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_CK, action);
+      return cleanUp;
+    }
+    if (command === "OK") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_OK, action);
+      return cleanUp;
+    }
+    if (command === "BY") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_BY, action);
+      return cleanUp;
+    }
+
+    if (command === "NO") {
+      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_NO, action);
+      return cleanUp;
+    }
+
+    cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_FB, action);
     return cleanUp;
   }
-
-  // onMidiMessage (params: {
-  //   callBack: (event: MidiTransportEvent<"midi">) => void;
-  // }) {}
 
   /**
    * Wait for a message with an address.
@@ -217,33 +266,33 @@ export class MidiTransport implements MidiTransportLike {
     command: T;
     /** @defaults to `500`. */
     exitMs?: number;
-  }): Promise<Result<MidiTransportEvent<T>, "wait-timeout">> {
-    const resolver = new Promise<Result<MidiTransportEvent<T>, "wait-timeout">>(
-      (resolve) => {
-        const delayController = new AbortController();
+  }): Promise<Result<MidiTransportSpecificEvent<T>, "wait-timeout">> {
+    const resolver = new Promise<
+      Result<MidiTransportSpecificEvent<T>, "wait-timeout">
+    >((resolve) => {
+      const delayController = new AbortController();
 
-        const cleanUp = this.onOnceMessage<T>({
-          command: params.command,
-          callBack: (event: MidiTransportEvent<T>) => {
-            delayController.abort();
-            resolve(event);
-          },
-        });
+      const cleanUp = this.onOnceMessage<T>({
+        command: params.command,
+        callBack: (event: MidiTransportSpecificEvent<T>) => {
+          delayController.abort();
+          resolve(event);
+        },
+      });
 
-        delay({
-          ms: params.exitMs || 500,
-          cancelOnController: delayController,
-        }).then(() => {
-          cleanUp();
-          resolve(
-            new Failure({
-              message: `Too slow to reply on ${params.command}`,
-              type: "wait-timeout",
-            }),
-          );
-        });
-      },
-    );
+      delay({
+        ms: params.exitMs || 500,
+        cancelOnController: delayController,
+      }).then(() => {
+        cleanUp();
+        resolve(
+          new Failure({
+            message: `Too slow to reply on ${params.command}`,
+            type: "wait-timeout",
+          }),
+        );
+      });
+    });
 
     return resolver;
   }
@@ -543,7 +592,7 @@ export class MidiTransport implements MidiTransportLike {
 
     return new Failure<"send-failure">({
       type: "send-failure",
-      message: `Faailed to reply message with input of ${JSON.stringify(params, null, 2)}.`,
+      message: `Failed to reply message with input of ${JSON.stringify(params, null, 2)}.`,
     });
   }
 }

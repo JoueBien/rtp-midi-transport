@@ -23,7 +23,7 @@ export function listenAddListnersForAutoOK(server: MidiTransportLike) {
           OK: {
             on: event.on,
             header: "OK",
-            token: event.decoded.IN.token,
+            token: event.decoded.token,
           },
         },
         to: {

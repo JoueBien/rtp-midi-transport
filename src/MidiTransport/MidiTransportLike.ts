@@ -6,11 +6,15 @@ import {
 import { Failure, Result } from "fail-up";
 import {
   DecodedMidiTransportMessage,
-  MidiTransportEvent,
   MidiTransportMessageSendParams,
   MidiTransportMessageRespondParams,
   MidiTransportUnknownEvent,
 } from "../types";
+import {} from "../constrains/message";
+import {
+  MidiTransportAnyEvent,
+  MidiTransportSpecificEvent,
+} from "../types/events";
 
 export interface MidiTransportLike {
   controlClient: UdpTransport;
@@ -50,28 +54,24 @@ export interface MidiTransportLike {
   }): Promise<Result<"ok", "aborted" | "not-listening" | "send-failure">>;
 
   // Handle events generic.
-  onAnyMessage(
-    callBack: (event: MidiTransportUnknownEvent) => void,
-  ): () => void;
+  onAnyMessage(callBack: (event: MidiTransportAnyEvent) => void): () => void;
   onOnceAnyMessage(
-    callBack: (event: MidiTransportUnknownEvent) => void,
+    callBack: (event: MidiTransportAnyEvent) => void,
   ): () => void;
 
   // Handle specific message.
   onMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportEvent<T>) => void;
+    callBack: (event: MidiTransportSpecificEvent<T>) => void;
   }): () => void;
   onOnceMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportEvent<T>) => void;
+    callBack: (event: MidiTransportSpecificEvent<T>) => void;
   }): () => void;
   waitForMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    /** @defaults to `500`. */
     exitMs?: number;
-  }): Promise<Result<MidiTransportEvent<T>, "wait-timeout">>;
-
+  }): Promise<Result<MidiTransportSpecificEvent<T>, "wait-timeout">>;
   sendAndWaitForMessage<
     T extends keyof MidiTransportMessageSendParams,
     Ret extends keyof MidiTransportMessageSendParams,
@@ -81,7 +81,7 @@ export interface MidiTransportLike {
       command: Ret;
       exitMs?: number;
     };
-  }): Promise<Result<MidiTransportEvent<Ret>, "wait-timeout">>;
+  }): Promise<Result<MidiTransportSpecificEvent<Ret>, "wait-timeout">>;
 
   // Handle errors.
   onError(callBack: (err: Failure<"on-error">) => void): () => void;

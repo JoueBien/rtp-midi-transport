@@ -28,7 +28,7 @@ export type MidiChannelData3Byte<Label, Command> = {
   channel: number;
   /** The 4 or 8 bit command represented as a 32 bit int. */
   command: Command;
-  /** The human redable version of the command. */
+  /** The human readable version of the command. */
   label: Label;
   /** The data from the command.
    * If the command only has one data byte then the second index in the array will be 0.

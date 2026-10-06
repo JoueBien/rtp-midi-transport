@@ -5,7 +5,6 @@ export type {
   Command,
   AppleMIDICommand,
   OnTransport,
-  MidiTransportEvent,
   MidiTransportUnknownEvent,
   DecodedMidiTransportMessage,
   MidiTransportMessageParams,
@@ -14,6 +13,5 @@ export type {
 
 // Lib Utils
 export { listenAddListnersForAutoOK } from "./MidiTransport/routines/listenAddListnersForAutoOK";
-export { castMidiTransportEventToAll } from "./utils/cast/castMidiTransportEventToAll";
 export { castMidiTransportMessageParamsTo } from "./utils/cast/castMidiTransportMessageParamsTo";
 export { castMidiTransportMessageSendParamsTo } from "./utils/cast/castMidiTransportMessageSendParamsTo";

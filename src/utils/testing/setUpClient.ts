@@ -49,7 +49,7 @@ export function setUpClient(args?: {
   });
 
   // Support functions.
-  /** Connect and wait untill we are done and ready. */
+  /** Connect and wait until we are done and ready. */
   async function connectAndWaitForClockDone() {
     const connected = await client.connect();
     expect(connected).toMatchObject(expect.any(AbortController));

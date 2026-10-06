@@ -18,13 +18,6 @@ export type RtpTimestamps =
 /** Which UDP Port it should be on. */
 export type OnTransport = "control" | "message";
 
-export type MidiTransportEvent<T extends keyof DecodedMidiTransportMessage> = {
-  msg: Buffer<ArrayBufferLike>;
-  decoded: Pick<DecodedMidiTransportMessage, T>;
-  on: OnTransport;
-  rinfo: RemoteInfo;
-};
-
 export type MidiTransportUnknownEvent = {
   msg: Buffer<ArrayBufferLike>;
   decoded: Partial<DecodedMidiTransportMessage>;

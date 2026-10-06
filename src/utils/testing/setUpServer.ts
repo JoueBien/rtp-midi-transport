@@ -2,7 +2,7 @@ import { MidiTransport } from "../../MidiTransport/MidiTransport";
 import { listenAddListnersForAutoOK } from "../../MidiTransport/routines/listenAddListnersForAutoOK";
 
 /** Set up a server for a test with everything we need to test a client.
- * Will automatically accept any cleint.
+ * Will automatically accept any client.
  * Cleans up on at end of each test cases.
  */
 export function setUpServer(args?: {
