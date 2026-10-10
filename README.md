@@ -1,6 +1,6 @@
 # @joue-bien/rtp-midi-transport
 
-A TypeScript library for sending MIDI messages over UDP without a driver, in compliance with Apple's RTP implementation.
+A TypeScript library for sending controller MIDI messages over UDP without a driver, in compliance with Apple's RTP implementation.
 
 # Install
 
@@ -19,19 +19,20 @@ Documintation can be found on the projects [GitHub Wiki](https://github.com/Joue
 - [@joue-bien/audio-transport](https://github.com/JoueBien/audio-transport#readme) - The library used for the underlying UDP transport.
 - [Fail Up](https://www.npmjs.com/package/fail-up) - The error handling library.
 
-# Limitations disclaimer
+# Supported features
 
-This library focuses on MIDI controllers, not real-time music playback. As control is the focus, there are a number of features that have not been fully implemented.
+This library focuses on MIDI controllers, not real-time music playback. As control is the focus, there are a number of features that have not been fully implemented. Merge requests are welcome if you want to add a feature or fix a missing feature.
 
-Merge requests are welcome if you want to add a feature or fix a missing feature.
-
-## Limitations
-
-- **No Bonjour Support**: This isn't a feature I need. If you need it, then you will need to use an npm package like [bonjour](https://www.npmjs.com/package/bonjour).
-- **Recovery journal handling**: I'm mainly focused on hardware surfaces, so this isn't a feature I need.
-- **Timestamp of MIDI messages interlacing**: I'm mainly focused on hardware surfaces, so this isn't a feature I need.
-- **System Extended Decoding**: I do need this feature, but not to the extent that I want to implement the ID decoding. Currently, the data bytes of the System Extended message will always come out as a buffer. You'll have to decode the ID codes and the subsequent data on your own. If you need this feature, I highly recommend you use Open Sound Control instead.
-- **Setting the running status flag in the header**: When encoding the running status, it will always be false (a completely unnecessary feature). The decoder is capable of reading the status byte value in the headers.
-- **Server Logic**: The server transport only handles parsing and message events. You will need to implement your own IN/OK handshake logic, BY logic, NO logic, CK startup spam, CK pulse and keep track of current clients.
-- **Clock Offset**: Clock exchanges are handled on both the client and server; however, only enough to keep the two devices talking to each other through the clock pulse system. If you need to calculate the difference in time between the server and client, you will need to do that on your own by listening for CK events.
-- **Enforcing Apple's MIDI subheader**: During decoding, the decoder skips checking most of the MIDI message subheader because we assume you are sending compliant messages. Why? The X-Touch doesn't and sets a single flag to the wrong value.
+| Feature                                                     | Supported | Notes                                                                                                                                                                                                                                                                                                         |
+| ----------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Client side connection handshake and sending Midi messages. | ✅        | Supported.                                                                                                                                                                                                                                                                                                    |
+| Server side connection handshake and sending Midi messages. | ✅        | Keeping track of connected clients must be implemented on your own.                                                                                                                                                                                                                                           |
+| Sending and receiving midi lists                            | ✅        | Supports encoding and decoding multiple midi messages in the midi list section.                                                                                                                                                                                                                               |
+| System extended Messages                                    | ✅        | Decodes as a buffer. You will need to encode and decode the System extended header on your own.                                                                                                                                                                                                               |
+| Test tools                                                  | ✅        | [vitest](https://vitest.dev/) utilities are supported for easily setting up both the server and client in tests.                                                                                                                                                                                              |
+| Byte timestamps in midi list.                               | ❌        | Decoding or encoding the interlaced of timestamps in the Midi list is not supported.                                                                                                                                                                                                                          |
+| Enforcing Apple's MIDI subheader                            | ⚠️        | During decoding, the decoder skips checking most of the MIDI message subheader because we assume you are sending compliant messages. Why? The X-Touch doesn't and sets a single flag to the wrong value.                                                                                                      |
+| Recovery journal handling.                                  | ❌        | Not supported, the decoder will skip journal sections. There is no journal encode support.                                                                                                                                                                                                                    |
+| Setting the running status flag in the header.              | ⚠️        | This flag can't be set in the encoder. It is exposed in the decoder.                                                                                                                                                                                                                                          |
+| Clock offset tracking.                                      | ⚠️        | Clock exchanges are handled on both the client and server; however, only enough to keep the two devices talking to each other through the clock pulse system. If you need to calculate the difference in time between the server and client, you will need to do that on your own by listening for CK events. |
+| No Bonjour Support.                                         | ❌        | This library does not implement Apples discovery layer. If you need Bonjour support use [bonjour](https://www.npmjs.com/package/bonjour).                                                                                                                                                                     |
