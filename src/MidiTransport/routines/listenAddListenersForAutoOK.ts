@@ -15,7 +15,7 @@ import { type MidiTransportLike } from "../MidiTransportLike";
  *
  */
 export function listenAddListenersForAutoOK(server: MidiTransportLike) {
-  server.onMessage({
+  return server.onMessage({
     command: "IN",
     callBack: async (event) => {
       const _res = await server.respond({

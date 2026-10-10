@@ -1,5 +1,6 @@
 import { Failure } from "fail-up";
 import { type MidiTransportLike } from "./../MidiTransportLike";
+import { waitForFirst } from "../../utils/waitForFirst";
 
 const EXIT_TIME_MS = 500;
 
@@ -8,28 +9,38 @@ const EXIT_TIME_MS = 500;
  */
 export async function connectOkCheck(transport: MidiTransportLike) {
   let connectionFailedAt = "control check";
-  // Knock on control port
-  const [controlRejected, controlOkay] = await Promise.all([
-    transport.waitForMessage({
-      command: "NO",
-      exitMs: EXIT_TIME_MS,
-    }),
-    transport.sendAndWaitForMessage({
-      send: {
-        IN: {
-          on: "control",
-          header: "IN",
+  // Knock on control port.
+  const { res1: controlOkay, res2: controlRejected } = await waitForFirst([
+    () =>
+      transport.sendAndWaitForMessage({
+        send: {
+          IN: {
+            on: "control",
+            header: "IN",
+          },
         },
-      },
-      listen: {
+        listen: {
+          exitMs: EXIT_TIME_MS,
+          command: "OK",
+        },
+      }),
+    () =>
+      transport.waitForMessage({
+        command: "NO",
         exitMs: EXIT_TIME_MS,
-        command: "OK",
-      },
-    }),
+      }),
   ]);
+
+  if (
+    controlRejected !== undefined &&
+    controlRejected instanceof Failure === false
+  ) {
+    connectionFailedAt = "control check - responded with NO";
+  }
 
   // Reject on success if token was bad.
   if (
+    controlOkay !== undefined &&
     controlOkay instanceof Failure === false &&
     controlOkay.decoded.token !== transport.token
   ) {
@@ -39,32 +50,41 @@ export async function connectOkCheck(transport: MidiTransportLike) {
     });
   }
 
-  // We can talk on Control port
-  if (
-    controlRejected instanceof Failure &&
-    controlOkay instanceof Failure === false
-  ) {
+  // We can talk on control port.
+  if (controlOkay !== undefined && controlOkay instanceof Failure === false) {
     connectionFailedAt = "message check";
-    const [messageRejected, messageOkay] = await Promise.all([
-      transport.waitForMessage({
-        command: "NO",
-        exitMs: EXIT_TIME_MS,
-      }),
-      transport.sendAndWaitForMessage({
-        send: {
-          IN: {
-            on: "message",
-            header: "IN",
+
+    // Knock on message port.
+    const { res1: messageOkay, res2: messageRejected } = await waitForFirst([
+      () =>
+        transport.sendAndWaitForMessage({
+          send: {
+            IN: {
+              on: "message",
+              header: "IN",
+            },
           },
-        },
-        listen: {
-          command: "OK",
-        },
-      }),
+          listen: {
+            command: "OK",
+          },
+        }),
+      () =>
+        transport.waitForMessage({
+          command: "NO",
+          exitMs: EXIT_TIME_MS,
+        }),
     ]);
+
+    if (
+      messageRejected !== undefined &&
+      messageRejected instanceof Failure === false
+    ) {
+      connectionFailedAt = "message check - responded with NO";
+    }
 
     // Reject on success if token was bad.
     if (
+      messageOkay !== undefined &&
       messageOkay instanceof Failure === false &&
       messageOkay.decoded.token !== transport.token
     ) {
@@ -74,18 +94,19 @@ export async function connectOkCheck(transport: MidiTransportLike) {
       });
     }
 
-    if (
-      messageRejected instanceof Failure &&
-      messageOkay instanceof Failure === false
-    ) {
+    // Return if we didn't fail.
+    if (messageOkay !== undefined && messageOkay instanceof Failure === false) {
       return "ok";
     }
+
+    // Return connection failed.
     transport.cleanUpController.abort();
     return new Failure<"connection-no">({
       type: "connection-no",
-      message: "Server message port replied with NO or did not respond.",
+      message: `Server message port replied with no or did not respond. Failed at Stage: ${connectionFailedAt}.`,
     });
   }
+
   transport.cleanUpController.abort();
   return new Failure<"connection-no">({
     type: "connection-no",

@@ -54,10 +54,6 @@ export function setUpClient(args?: {
     const connected = await client.connect();
     expect(connected).toMatchObject(expect.any(AbortController));
     await vi.waitFor(() => {
-      // console.log(
-      //   "@@@clientStartUpOnSpy",
-      //   JSON.stringify(clientStartUpOnSpy.mock.calls, null, 2),
-      // );
       expect(clientStartUpOnSpy).toHaveBeenCalledWith(
         3,
         expect.objectContaining({

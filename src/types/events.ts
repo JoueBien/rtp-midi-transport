@@ -1,6 +1,7 @@
 import { DecodedMidiTransportMessage, OnTransport } from "../types";
 import { RemoteInfo } from "dgram";
 import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+import { MidiData } from "./MidiData";
 
 export type MidiTransportInEvent = {
   msg: Buffer<ArrayBufferLike>;
@@ -63,6 +64,15 @@ export type MidiTransportSpecificEvent<
 > = {
   msg: Buffer<ArrayBufferLike>;
   decoded: DecodedMidiTransportMessage[T];
+  on: OnTransport;
+  rinfo: RemoteInfo;
+};
+
+export type MidiTransportSpecificMidiEvent<T extends keyof MidiData> = {
+  msg: Buffer<ArrayBufferLike>;
+  decoded: Omit<DecodedMidiTransportMessage["midi"], "data"> & {
+    data: MidiData[T];
+  };
   on: OnTransport;
   rinfo: RemoteInfo;
 };

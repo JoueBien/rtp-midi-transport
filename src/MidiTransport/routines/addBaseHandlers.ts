@@ -14,6 +14,11 @@ import {
   EMIT_MESSAGE_OK,
 } from "../../constrains/message";
 import { Failure } from "fail-up";
+import {
+  commandToLabel,
+  commandToLabelOrUndefined,
+} from "../../constrains/midiCommands";
+import { MidiData } from "../../types/MidiData";
 
 /** Add handlers to listen for events on both ports.
  * These listeners are suitable for both client and server.
@@ -75,11 +80,32 @@ export function addBaseHandlers(transport: MidiTransportLike) {
       rinfo,
     };
 
-    if ("MIDI" in data.decoded) {
+    if ("midi" in data.decoded) {
+      // Emit generic midi message on bus.
       transport.eventEmitter.emit(EMIT_MESSAGE_MIDI, {
         ...data,
         decoded: data.decoded.midi,
       });
+      // Emit specific midi event on bus.
+      if (data.decoded.midi?.data[0] !== undefined) {
+        // Dirty cast
+        const commandNumber = Number(
+          Object.keys(data.decoded.midi.data[0])[0],
+        ) as keyof MidiData;
+        const label = commandToLabelOrUndefined(commandNumber);
+
+        // Make sure it's actually a number and has a label.
+        if (isNaN(commandNumber) === false && label !== undefined) {
+          transport.eventEmitter.emit(`${EMIT_MESSAGE_MIDI}_${commandNumber}`, {
+            ...data,
+            decoded: {
+              ...data.decoded.midi,
+              // Emit the first midi Event.
+              data: data.decoded.midi.data[0][`${commandNumber}`],
+            },
+          });
+        }
+      }
     }
 
     if ("IN" in data.decoded) {

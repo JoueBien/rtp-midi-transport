@@ -33,8 +33,11 @@ import { castMidiTransportMessageRespondParamsTo } from "../utils/cast/castMidiT
 import {
   MidiTransportAnyEvent,
   MidiTransportSpecificEvent,
+  MidiTransportSpecificMidiEvent,
 } from "../types/events";
 import { connectAddListenersForClockSync } from "./routines/connectAddListenersForClockSync";
+import { MidiData } from "../types/MidiData";
+import { isPartialMatch } from "../utils/isPartialMatch";
 
 export class MidiTransport implements MidiTransportLike {
   controlClient: UdpTransport;
@@ -220,45 +223,143 @@ export class MidiTransport implements MidiTransportLike {
     callBack: (event: MidiTransportSpecificEvent<T>) => void;
   }) {
     const { command, callBack } = params;
-    let cleanUp = () => {};
+    let cleanUp = { reference: () => {} };
     function action(event: MidiTransportSpecificEvent<T>) {
-      cleanUp();
+      cleanUp.reference();
       return callBack(event);
     }
 
     if (command === "midi") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_MIDI, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_MIDI, action);
+      return cleanUp.reference;
     }
 
     if (command === "IN") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_IN, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_IN, action);
+      return cleanUp.reference;
     }
     if (command === "CK") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_CK, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_CK, action);
+      return cleanUp.reference;
     }
     if (command === "OK") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_OK, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_OK, action);
+      return cleanUp.reference;
     }
     if (command === "BY") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_BY, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_BY, action);
+      return cleanUp.reference;
     }
 
     if (command === "NO") {
-      cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_NO, action);
-      return cleanUp;
+      cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_NO, action);
+      return cleanUp.reference;
     }
 
-    cleanUp = this.eventEmitter.listen(EMIT_MESSAGE_FB, action);
-    return cleanUp;
+    cleanUp.reference = this.eventEmitter.listen(EMIT_MESSAGE_FB, action);
+    return cleanUp.reference;
+  }
+
+  /** Add a listener to listen for a type of midi message. */
+  onMidiMessage<T extends keyof MidiData>(params: {
+    /** Which Midi command to listen to. */
+    command: T;
+    /** Midi command must match known values for the callback to run. */
+    matches?: Partial<MidiData[T]>;
+    callBack: (event: MidiTransportSpecificMidiEvent<T>) => void;
+  }) {
+    const { command, callBack, matches } = params;
+
+    return this.eventEmitter.listen(
+      `${EMIT_MESSAGE_MIDI}_${command}`,
+      (event: MidiTransportSpecificMidiEvent<T>) => {
+        if (matches === undefined) {
+          callBack(event);
+        } else {
+          const foundMatch = isPartialMatch({ ...matches }, event.decoded.data);
+          if (foundMatch === true) {
+            callBack(event);
+          }
+        }
+      },
+    );
+  }
+
+  /** Add a listener to listen for a type of midi message once. */
+  onMidiMessageOnce<T extends keyof MidiData>(params: {
+    /** Which Midi command to listen to. */
+    command: T;
+    /** Midi command must match known values for the callback to run. */
+    matches?: Partial<MidiData[T]>;
+    callBack: (event: MidiTransportSpecificMidiEvent<T>) => void;
+  }) {
+    const { command, callBack, matches } = params;
+    let cleanUp = { reference: () => {} };
+    function action(event: MidiTransportSpecificMidiEvent<T>) {
+      if (matches === undefined) {
+        cleanUp.reference();
+        return callBack(event);
+      } else {
+        const foundMatch = isPartialMatch({ ...matches }, event.decoded.data);
+        if (foundMatch === true) {
+          cleanUp.reference();
+          return callBack(event);
+        }
+      }
+    }
+
+    cleanUp.reference = this.eventEmitter.listen(
+      `${EMIT_MESSAGE_MIDI}_${command}`,
+      action,
+    );
+    return cleanUp.reference;
   }
 
   /**
-   * Wait for a message with an address.
+   * Wait for a midi message.
+   * Will return an error if does not get a message within 500 milliseconds.
+   */
+  async waitForMidiMessage<T extends keyof MidiData>(params: {
+    /** Which Midi command to listen to. */
+    command: T;
+    /** Midi command must match known values for the callback to run. */
+    matches?: Partial<MidiData[T]>;
+    /** @defaults to `500`. */
+    exitMs?: number;
+  }): Promise<Result<MidiTransportSpecificMidiEvent<T>, "wait-timeout">> {
+    const resolver = new Promise<
+      Result<MidiTransportSpecificMidiEvent<T>, "wait-timeout">
+    >((resolve) => {
+      const delayController = new AbortController();
+
+      const cleanUp = this.onMidiMessageOnce<T>({
+        command: params.command,
+        matches: params.matches,
+        callBack: (event: MidiTransportSpecificMidiEvent<T>) => {
+          delayController.abort();
+          resolve(event);
+        },
+      });
+
+      delay({
+        ms: params.exitMs || 500,
+        cancelOnController: delayController,
+      }).then(() => {
+        cleanUp();
+        resolve(
+          new Failure({
+            message: `Too slow to reply on ${params.command}`,
+            type: "wait-timeout",
+          }),
+        );
+      });
+    });
+
+    return resolver;
+  }
+
+  /**
+   * Wait for a message with a command type.
    * Will return an error if does not get a message within 500 milliseconds.
    */
   async waitForMessage<T extends keyof DecodedMidiTransportMessage>(params: {

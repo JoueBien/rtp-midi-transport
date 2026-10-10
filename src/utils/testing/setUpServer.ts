@@ -14,10 +14,24 @@ export function setUpServer(args?: {
   };
   hardwareName?: string;
   cleanUpController?: AbortController;
+
+  disableAutoOk?: boolean;
 }) {
+  const { disableAutoOk } = args || {};
+
   // State.
   const serverOnSpy = vi.fn();
   let server: MidiTransport;
+
+  const cleanUp: {
+    listenAddListenersForAutoOkCleanUp: () => void;
+  } = {
+    listenAddListenersForAutoOkCleanUp: () => {
+      throw new Error(
+        "listenAddListenersForAutoOkCleanUp was not added to server.",
+      );
+    },
+  };
 
   // Set up.
   beforeEach(() => {
@@ -37,9 +51,12 @@ export function setUpServer(args?: {
     server.onAnyMessage((event) => {
       serverOnSpy(event);
     });
-    // Set up auto Reply as OK and start server.
 
-    listenAddListenersForAutoOK(server);
+    // Set up auto Reply as OK and start server.
+    if (disableAutoOk !== true) {
+      cleanUp.listenAddListenersForAutoOkCleanUp =
+        listenAddListenersForAutoOK(server);
+    }
   });
 
   // Make sure we clean up.
@@ -56,6 +73,8 @@ export function setUpServer(args?: {
   return {
     /** Spy including start up handshake. */
     serverOnSpy,
+    /** The clean up functions for any listen added on beforeEach */
+    serverCleanUp: cleanUp,
     /** Get the current server that has been set up. */
     getCurrentServer,
   };

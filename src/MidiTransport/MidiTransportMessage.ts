@@ -90,8 +90,6 @@ export const MidiTransportMessage = {
     // Decode Midi.
     if (command === "midi") {
       const midi = decodeAndPopRtpMidi(unit8Array1);
-      console.log("@@@FROM<-", command, messageBuffer);
-      console.log("@@@MIDI DECODE<-", JSON.stringify(midi, null, 2));
       return {
         midi: {
           header: "midi",
