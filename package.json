@@ -1,6 +1,6 @@
 {
   "name": "@joue-bien/rtp-midi-transport",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "exports": {
     ".": "./src/index.ts",
     "./constrains": "./src/index.constrains.ts",
@@ -13,10 +13,10 @@
     "typecheck": "tsc --noEmit"
   },
   "author": "JoueBien",
-  "description": "A typescript library for sending Midi Messages over UDP - in compliance with Apples RTP implmentation.",
+  "description": "A typescript library for sending Midi Messages over UDP - in compliance with Apples RTP implementation.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoueBien/osc-toy.git"
+    "url": "git+https://github.com/JoueBien/rtp-midi-transport.git"
   },
   "license": "MIT NON-AI",
   "dependencies": {
