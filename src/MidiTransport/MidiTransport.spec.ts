@@ -1,8 +1,8 @@
 import { vi } from "vitest";
 import { sendAndWaitFor } from "../utils/testing/doInOrder";
-import { setUpClient } from "../utils/testing/setUpClient";
+import { setupClient } from "../utils/testing/_setupClient";
 import { setUpFakeTimers } from "../utils/testing/setUpFakeTimers";
-import { setUpServer } from "../utils/testing/setUpServer";
+import { setupServer } from "../utils/testing/_setupServer";
 
 describe("MidiTransport", () => {
   const { advanceTimersByTimeAsync } = setUpFakeTimers({
@@ -17,9 +17,9 @@ describe("MidiTransport", () => {
     ],
   });
 
-  const { getCurrentClient, clientStartUpOnSpy } = setUpClient();
+  const { getCurrentClient, clientStartUpOnSpy } = setupClient();
 
-  const { getCurrentServer, serverOnSpy, serverCleanUp } = setUpServer();
+  const { getCurrentServer, serverOnSpy, serverCleanUp } = setupServer();
 
   it("Connects and runs through okay check and clocks", async () => {
     const client = getCurrentClient();

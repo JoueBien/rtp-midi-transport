@@ -1,3 +1,3 @@
-export { setUpServer } from "./utils/testing/setUpServer";
-export { setUpClient } from "./utils/testing/setUpClient";
+export { setupServer } from "./utils/testing/_setupServer";
+export { setupClient } from "./utils/testing/_setupClient";
 export { doInOrder, sendAndWaitFor } from "./utils/testing/doInOrder";

@@ -5,7 +5,7 @@ import { listenAddListenersForAutoOK } from "../../MidiTransport/routines/listen
  * Will automatically accept any client.
  * Cleans up on at end of each test cases.
  */
-export function setUpServer(args?: {
+export function setupServer(args?: {
   controlClient?: {
     responsePort?: number;
   };

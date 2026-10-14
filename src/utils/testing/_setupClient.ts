@@ -2,7 +2,7 @@ import { MidiTransport } from "../../MidiTransport/MidiTransport";
 
 /** Set up a client for testing.
  * Cleans up on at end of each test cases. */
-export function setUpClient(args?: {
+export function setupClient(args?: {
   controlClient?: {
     remotePort?: number;
     responsePort?: number;
