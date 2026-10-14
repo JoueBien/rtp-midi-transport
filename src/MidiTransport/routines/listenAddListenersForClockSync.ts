@@ -5,7 +5,7 @@ import { type MidiTransportLike } from "../MidiTransportLike";
 export function listenAddListenersForClockSync(transport: MidiTransportLike) {
   const cleanUp = transport.onMessage({
     command: "CK",
-    callBack: (event) => {
+    callback: (event) => {
       const { decoded: CK } = event;
       const { count, timestamps } = CK;
       if (count === 0 && timestamps[0]) {

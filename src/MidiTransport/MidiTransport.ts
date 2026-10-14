@@ -169,64 +169,64 @@ export class MidiTransport implements MidiTransportLike {
   }
 
   /** Add a listener to listen for all messages. */
-  onAnyMessage(callBack: (event: MidiTransportAnyEvent) => void) {
-    return this.eventEmitter.listen(EMIT_MESSAGE_ALL, callBack);
+  onAnyMessage(callback: (event: MidiTransportAnyEvent) => void) {
+    return this.eventEmitter.listen(EMIT_MESSAGE_ALL, callback);
   }
 
   /** Add a listener to listen for any message once. */
-  onOnceAnyMessage(callBack: (event: MidiTransportAnyEvent) => void) {
-    return this.eventEmitter.listenOnce(EMIT_MESSAGE_ALL, callBack);
+  onOnceAnyMessage(callback: (event: MidiTransportAnyEvent) => void) {
+    return this.eventEmitter.listenOnce(EMIT_MESSAGE_ALL, callback);
   }
 
   /** Add a listener to listen for all errors. */
-  onError(callBack: (err: Failure<"on-error">) => void) {
-    return this.eventEmitter.listen(EMIT_ERROR, callBack);
+  onError(callback: (err: Failure<"on-error">) => void) {
+    return this.eventEmitter.listen(EMIT_ERROR, callback);
   }
 
   /** Add a listener to listen for any error once. */
-  onOnceError(callBack: (err: Failure<"on-error">) => void) {
-    return this.eventEmitter.listenOnce(EMIT_ERROR, callBack);
+  onOnceError(callback: (err: Failure<"on-error">) => void) {
+    return this.eventEmitter.listenOnce(EMIT_ERROR, callback);
   }
 
   /** Add a listener to listen for a messages with an address. */
   onMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportSpecificEvent<T>) => void;
+    callback: (event: MidiTransportSpecificEvent<T>) => void;
   }) {
-    const { command, callBack } = params;
+    const { command, callback } = params;
     if (command === "midi") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_MIDI, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_MIDI, callback);
     }
 
     if (command === "IN") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_IN, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_IN, callback);
     }
     if (command === "CK") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_CK, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_CK, callback);
     }
     if (command === "OK") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_OK, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_OK, callback);
     }
     if (command === "BY") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_BY, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_BY, callback);
     }
     if (command === "NO") {
-      return this.eventEmitter.listen(EMIT_MESSAGE_NO, callBack);
+      return this.eventEmitter.listen(EMIT_MESSAGE_NO, callback);
     }
 
-    return this.eventEmitter.listen(EMIT_MESSAGE_FB, callBack);
+    return this.eventEmitter.listen(EMIT_MESSAGE_FB, callback);
   }
 
   /** Add a listener to listen for a message with an address once.*/
   onOnceMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportSpecificEvent<T>) => void;
+    callback: (event: MidiTransportSpecificEvent<T>) => void;
   }) {
-    const { command, callBack } = params;
+    const { command, callback } = params;
     let cleanUp = { reference: () => {} };
     function action(event: MidiTransportSpecificEvent<T>) {
       cleanUp.reference();
-      return callBack(event);
+      return callback(event);
     }
 
     if (command === "midi") {
@@ -266,19 +266,19 @@ export class MidiTransport implements MidiTransportLike {
     command: T;
     /** Midi command must match known values for the callback to run. */
     matches?: Partial<MidiData[T]>;
-    callBack: (event: MidiTransportSpecificMidiEvent<T>) => void;
+    callback: (event: MidiTransportSpecificMidiEvent<T>) => void;
   }) {
-    const { command, callBack, matches } = params;
+    const { command, callback, matches } = params;
 
     return this.eventEmitter.listen(
       `${EMIT_MESSAGE_MIDI}_${command}`,
       (event: MidiTransportSpecificMidiEvent<T>) => {
         if (matches === undefined) {
-          callBack(event);
+          callback(event);
         } else {
           const foundMatch = isPartialMatch({ ...matches }, event.decoded.data);
           if (foundMatch === true) {
-            callBack(event);
+            callback(event);
           }
         }
       },
@@ -291,19 +291,19 @@ export class MidiTransport implements MidiTransportLike {
     command: T;
     /** Midi command must match known values for the callback to run. */
     matches?: Partial<MidiData[T]>;
-    callBack: (event: MidiTransportSpecificMidiEvent<T>) => void;
+    callback: (event: MidiTransportSpecificMidiEvent<T>) => void;
   }) {
-    const { command, callBack, matches } = params;
+    const { command, callback, matches } = params;
     let cleanUp = { reference: () => {} };
     function action(event: MidiTransportSpecificMidiEvent<T>) {
       if (matches === undefined) {
         cleanUp.reference();
-        return callBack(event);
+        return callback(event);
       } else {
         const foundMatch = isPartialMatch({ ...matches }, event.decoded.data);
         if (foundMatch === true) {
           cleanUp.reference();
-          return callBack(event);
+          return callback(event);
         }
       }
     }
@@ -335,7 +335,7 @@ export class MidiTransport implements MidiTransportLike {
       const cleanUp = this.onMidiMessageOnce<T>({
         command: params.command,
         matches: params.matches,
-        callBack: (event: MidiTransportSpecificMidiEvent<T>) => {
+        callback: (event: MidiTransportSpecificMidiEvent<T>) => {
           delayController.abort();
           resolve(event);
         },
@@ -374,7 +374,7 @@ export class MidiTransport implements MidiTransportLike {
 
       const cleanUp = this.onOnceMessage<T>({
         command: params.command,
-        callBack: (event: MidiTransportSpecificEvent<T>) => {
+        callback: (event: MidiTransportSpecificEvent<T>) => {
           delayController.abort();
           resolve(event);
         },

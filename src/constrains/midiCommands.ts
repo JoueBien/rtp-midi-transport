@@ -1,9 +1,52 @@
 import { MidiLabel } from "../types/MidiData";
 
+export const NoteOff = 8;
+export const NoteOn: 9 = 9;
+export const PolyphonicAftertouch = 10;
+export const ControlChange = 11;
+export const ProgramChange = 12;
+export const ChannelAftertouch = 13;
+export const PitchBend = 14;
+export const TimeCodeQuarterFrame = 241;
+export const SongPositionPointer = 242;
+export const SongSelect = 243;
+export const TuneRequest = 246;
+export const TimingClock = 248;
+export const Start = 250;
+export const Continue = 251;
+export const Stop = 252;
+export const ActiveSensing = 254;
+export const SystemReset = 255;
+export const SystemExclusiveStart = 240;
+export const SystemExclusiveEnd = 247;
+
 /** Look up for labels to 4 bit MIDI commands.
  * Note Undefined is not in this list.
  */
-export const LABEL_TO_MIDI_LOOK_UP: Record<MidiLabel, number> = {
+export const LABEL_TO_MIDI_LOOK_UP: {
+  NoteOff: 8;
+  NoteOn: 9;
+  PolyphonicAftertouch: 10;
+  ControlChange: 11;
+  ProgramChange: 12;
+  ChannelAftertouch: 13;
+  PitchBend: 14;
+  TimeCodeQuarterFrame: 241;
+  SongPositionPointer: 242;
+  SongSelect: 243;
+  TuneRequest: 246;
+  TimingClock: 248;
+  Start: 250;
+  Continue: 251;
+  Stop: 252;
+  ActiveSensing: 254;
+  SystemReset: 255;
+  SystemExclusiveStart: 240;
+  SystemExclusiveEnd: 247;
+
+  /** Here to exhaust types. DO NOT USE to look up. */
+  Undefined: 253;
+} = {
   NoteOff: 8,
   NoteOn: 9,
   PolyphonicAftertouch: 10,
@@ -18,7 +61,7 @@ export const LABEL_TO_MIDI_LOOK_UP: Record<MidiLabel, number> = {
   TimingClock: 248,
   Start: 250,
   Continue: 251,
-  Stop: 253,
+  Stop: 252,
   ActiveSensing: 254,
   SystemReset: 255,
   SystemExclusiveStart: 240,

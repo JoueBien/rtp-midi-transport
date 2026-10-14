@@ -217,7 +217,7 @@ describe("MidiTransport", () => {
 
     server.onOnceMessage({
       command: "IN",
-      callBack: async (event) => {
+      callback: async (event) => {
         return await server.respond({
           msg: {
             NO: {
@@ -254,7 +254,7 @@ describe("MidiTransport", () => {
 
     server.onMessage({
       command: "IN",
-      callBack: async (event) => {
+      callback: async (event) => {
         if (event.on === "control") {
           return await server.respond({
             msg: {
@@ -541,7 +541,7 @@ describe("MidiTransport", () => {
             channel: 1,
             data: [100, 101],
           },
-          callBack: (event) => {
+          callback: (event) => {
             midiSpy(event);
           },
         }),

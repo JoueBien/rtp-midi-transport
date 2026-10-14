@@ -54,19 +54,19 @@ export interface MidiTransportLike {
   }): Promise<Result<"ok", "aborted" | "not-listening" | "send-failure">>;
 
   // Handle events generic.
-  onAnyMessage(callBack: (event: MidiTransportAnyEvent) => void): () => void;
+  onAnyMessage(callback: (event: MidiTransportAnyEvent) => void): () => void;
   onOnceAnyMessage(
-    callBack: (event: MidiTransportAnyEvent) => void,
+    callback: (event: MidiTransportAnyEvent) => void,
   ): () => void;
 
   // Handle specific message.
   onMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportSpecificEvent<T>) => void;
+    callback: (event: MidiTransportSpecificEvent<T>) => void;
   }): () => void;
   onOnceMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
-    callBack: (event: MidiTransportSpecificEvent<T>) => void;
+    callback: (event: MidiTransportSpecificEvent<T>) => void;
   }): () => void;
   waitForMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
@@ -84,6 +84,6 @@ export interface MidiTransportLike {
   }): Promise<Result<MidiTransportSpecificEvent<Ret>, "wait-timeout">>;
 
   // Handle errors.
-  onError(callBack: (err: Failure<"on-error">) => void): () => void;
-  onOnceError(callBack: (err: Failure<"on-error">) => void): () => void;
+  onError(callback: (err: Failure<"on-error">) => void): () => void;
+  onOnceError(callback: (err: Failure<"on-error">) => void): () => void;
 }
