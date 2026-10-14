@@ -1,8 +1,8 @@
 import { vi } from "vitest";
 import { sendAndWaitFor } from "../utils/testing/doInOrder";
-import { setupClient } from "../utils/testing/_setupClient";
+import { setupClient } from "../utils/testing/setupClient";
 import { setUpFakeTimers } from "../utils/testing/setUpFakeTimers";
-import { setupServer } from "../utils/testing/_setupServer";
+import { setupServer } from "../utils/testing/setupServer";
 
 describe("MidiTransport", () => {
   const { advanceTimersByTimeAsync } = setUpFakeTimers({
