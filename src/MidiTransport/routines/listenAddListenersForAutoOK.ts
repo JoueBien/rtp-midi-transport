@@ -12,7 +12,6 @@ import { type MidiTransportLike } from "../MidiTransportLike";
  * // Then connect with client
  * await client.connect();
  * ```
- *
  */
 export function listenAddListenersForAutoOK(server: MidiTransportLike) {
   return server.onMessage({

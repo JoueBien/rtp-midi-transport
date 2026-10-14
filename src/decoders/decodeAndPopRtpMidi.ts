@@ -18,8 +18,7 @@ export type DecodedRrpMidiMessage = {
   messageByteLength: number;
   /** Is there a journal section */
   journal: boolean;
-  /**
-   * true - denotes if the midi list includes 4 byte timestamps before each Midi command in the MIDI List.
+  /** When `true` denotes if the midi list includes 4 byte timestamps before each Midi command in the MIDI List.
    * (1-4 octets long, or 0 octets if Z = 0).*/
   timestamps: boolean;
   /** Original used midi repeat command. */

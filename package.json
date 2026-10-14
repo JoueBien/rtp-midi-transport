@@ -1,7 +1,12 @@
 {
   "name": "@joue-bien/rtp-midi-transport",
   "version": "0.0.0",
-  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./constrains": "./src/index.constrains.ts",
+    "./utils": "./src/index.utils.ts",
+    "./testing": "./src/index.testing.ts"
+  },
   "scripts": {
     "test": "vitest --coverage --run",
     "test:watch": "vitest --coverage",

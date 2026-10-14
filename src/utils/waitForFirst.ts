@@ -1,6 +1,7 @@
 import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
 
-/** Run two Promise and return the first one.
+/**
+ * Run two Promise and return the first one.
  * The second promise never resolves.
  *
  * @note in testing this can leave handles open if both don't resolve.

@@ -21,8 +21,7 @@ import {
 import { MidiData } from "../../types/MidiData";
 
 /** Add handlers to listen for events on both ports.
- * These listeners are suitable for both client and server.
- */
+ * These listeners are suitable for both client and server. */
 export function addBaseHandlers(transport: MidiTransportLike) {
   // Add listeners
   transport.controlClient.onMessage((msg: Buffer, rinfo: RemoteInfo) => {

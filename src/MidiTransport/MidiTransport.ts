@@ -145,7 +145,7 @@ export class MidiTransport implements MidiTransportLike {
     return okayCheckRes === "ok" ? this.cleanUpController : okayCheckRes;
   }
 
-  /**  Listen on single port */
+  /**  Start the server listening on control and message ports. */
   async listen(): Promise<Result<AbortController, "listen-failed">> {
     const [controlConnected, messageConnected] = [
       await this.controlClient.listen(),
@@ -315,10 +315,8 @@ export class MidiTransport implements MidiTransportLike {
     return cleanUp.reference;
   }
 
-  /**
-   * Wait for a midi message.
-   * Will return an error if does not get a message within 500 milliseconds.
-   */
+  /** Wait for a midi message.
+   * Will return an error if does not get a message within 500 milliseconds. */
   async waitForMidiMessage<T extends keyof MidiData>(params: {
     /** Which Midi command to listen to. */
     command: T;
@@ -358,10 +356,8 @@ export class MidiTransport implements MidiTransportLike {
     return resolver;
   }
 
-  /**
-   * Wait for a message with a command type.
-   * Will return an error if does not get a message within 500 milliseconds.
-   */
+  /** Wait for a message with a command type.
+   * Will return an error if does not get a message within 500 milliseconds. */
   async waitForMessage<T extends keyof DecodedMidiTransportMessage>(params: {
     command: T;
     /** @defaults to `500`. */

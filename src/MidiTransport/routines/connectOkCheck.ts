@@ -5,8 +5,7 @@ import { waitForFirst } from "../../utils/waitForFirst";
 const EXIT_TIME_MS = 500;
 
 /** Run through the IN/OK cycle on both ports.
- * Will return error if server takes longer than 500ms to respond.
- */
+ * Will return error if server takes longer than 500ms to respond.*/
 export async function connectOkCheck(transport: MidiTransportLike) {
   let connectionFailedAt = "control check";
   // Knock on control port.

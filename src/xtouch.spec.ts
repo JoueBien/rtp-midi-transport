@@ -45,14 +45,8 @@ describe.skip("MidiTransport", () => {
         cleanUpController: cleanUpController,
       });
 
-      // client.onAnyMessage((event: MidiTransportUnknownEvent) => {
-      //   clientOnSpy(event);
-      //   // console.log(event);
-      // });
-
       // Connect to client to server and finish connection handshake.
       const floatingClientOkay = await client.connect();
-      console.log("@@@CONNECTED", floatingClientOkay);
       expect(floatingClientOkay).toMatchObject(expect.any(AbortController));
 
       // Turn all buttons on
@@ -147,8 +141,6 @@ describe.skip("MidiTransport", () => {
           // name: "CTL",
         },
       });
-
-      console.log("@@@HANG UP");
 
       // Clean Up
       cleanUpController.abort();

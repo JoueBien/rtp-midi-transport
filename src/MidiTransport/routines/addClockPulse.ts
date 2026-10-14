@@ -1,7 +1,7 @@
 import { timestamp } from "@joue-bien/audio-transport";
 import { type MidiTransportLike } from "./../MidiTransportLike";
 
-/** Adds a recurring clock event sender to keep the connection alive.
+/** Add a recurring clock event sender to keep the connection alive.
  * The clock event must be sent at least once every 60 seconds.
  * To make sure we stay connected we run it every 50 seconds. */
 export function addClockPulse(transport: MidiTransportLike) {

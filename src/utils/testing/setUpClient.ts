@@ -1,8 +1,7 @@
 import { MidiTransport } from "../../MidiTransport/MidiTransport";
 
 /** Set up a client for testing.
- * Cleans up on at end of each test cases.
- */
+ * Cleans up on at end of each test cases. */
 export function setUpClient(args?: {
   controlClient?: {
     remotePort?: number;
@@ -85,9 +84,9 @@ export function setUpClient(args?: {
   return {
     /** Spy including start up handshake. */
     clientStartUpOnSpy,
-    /** Spy for messages after start up handskae. */
+    /** Spy for messages after start up handshake. */
     clientOnSpy,
-    /** Connect and wait for clock message then return referance to client connect state. */
+    /** Connect and wait for clock message then return reference to client connect state. */
     connectAndWaitForClockDone,
     /** Get the current client that has been set up. */
     getCurrentClient,

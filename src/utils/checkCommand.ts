@@ -1,6 +1,6 @@
 import { Command } from "../types";
 
-/** Check if a string matches an RTP MIDI Commnad. */
+/** Check if a string matches an RTP MIDI Command. */
 export function checkCommand(str: string | Command): Command {
   switch (str) {
     case "OK":

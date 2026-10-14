@@ -28,7 +28,6 @@ export function encodeRtpClock(params: {
     ...Uint8Array.from([BUFFER_PADDING.NULL]),
     // Encode timestamps
     ...Buffer.concat(
-      // TODO: Make unsigned
       timestamps.map((stamp) => unsignedIntEncoder.encode64Bit(stamp)),
     ),
   ]);

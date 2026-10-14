@@ -1,7 +1,7 @@
 import { timestamp } from "@joue-bien/audio-transport";
 import { type MidiTransportLike } from "../MidiTransportLike";
 
-/** Add listeners for clock sync. (Client Only) */
+/** Add listeners for clock sync. (Client Only). */
 export function connectAddListenersForClockSync(transport: MidiTransportLike) {
   const cleanUp = transport.onMessage({
     command: "CK",
