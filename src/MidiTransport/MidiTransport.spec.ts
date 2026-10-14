@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { sendAndWaitFor } from "../utils/testing/doInOrder";
+import { sendAndWaitFor } from "../utils/testing/sendAndWaitFor";
 import { setupClient } from "../utils/testing/setupClient";
 import { setUpFakeTimers } from "../utils/testing/setUpFakeTimers";
 import { setupServer } from "../utils/testing/setupServer";

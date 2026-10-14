@@ -14,11 +14,8 @@ import {
   EMIT_MESSAGE_OK,
 } from "../../constrains/message";
 import { Failure } from "fail-up";
-import {
-  commandToLabel,
-  commandToLabelOrUndefined,
-} from "../../constrains/midiCommands";
 import { MidiData } from "../../types/MidiData";
+import { commandToLabelOrUndefined } from "../../utils/cast/commandToLabel";
 
 /** Add handlers to listen for events on both ports.
  * These listeners are suitable for both client and server. */
