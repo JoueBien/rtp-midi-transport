@@ -1,31 +1,14 @@
 import { MidiTransport } from "./MidiTransport/MidiTransport";
-import { MidiTransportUnknownEvent } from "./types";
-import { setUpFakeTimers } from "./utils/testing/setUpFakeTimers";
-import { listenAddListenersForAutoOK } from "./MidiTransport/routines/listenAddListenersForAutoOK";
 import { delay, timestamp } from "@joue-bien/audio-transport";
-import { Failure } from "fail-up";
-import { LABEL_TO_MIDI_LOOK_UP } from "./constrains/midiCommands";
 import { castUnsignedInt14ToMidiData } from "./utils/cast/castUnsignedInt14ToMidiData";
 
 describe.skip("MidiTransport", () => {
-  // beforeEach(() => {
-  //   vi.setConfig({
-  //     testTimeout: 60 * 1000,
-  //   });
-  // });
-  // const { advanceTimersByTimeAsync, runOnlyPendingTimersAsync } =
-  //   setUpFakeTimers({
-  //     fake: ["fake", "Date", "performance", "setInterval", "clearInterval"],
-  //   });
-
   it(
     "Connects and runs through okay check and clocks",
     {
       timeout: 60 * 1000 * 2,
     },
     async () => {
-      // const serverOnSpy = vi.fn();
-      // const clientOnSpy = vi.fn();
       console.clear();
 
       const cleanUpController = new AbortController();
@@ -54,7 +37,7 @@ describe.skip("MidiTransport", () => {
         await client.send({
           midi: {
             header: "midi",
-            timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn),
+            timestamp: timestamp.nowRTP32Bit(),
             data: [
               {
                 9: {
@@ -75,7 +58,7 @@ describe.skip("MidiTransport", () => {
         await client.send({
           midi: {
             header: "midi",
-            timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn),
+            timestamp: timestamp.nowRTP32Bit(),
             data: [
               {
                 [14]: {
@@ -94,7 +77,7 @@ describe.skip("MidiTransport", () => {
       // client.send({
       //   midi: {
       //     header: "midi",
-      //     timestamp: Number(timestamp.nowRTP64Bit() & 0xffffffffn) + 30,
+      //     timestamp: timestamp.nowRTP32Bit()  + 30,
       //     data: [
       //       {
       //         9: {

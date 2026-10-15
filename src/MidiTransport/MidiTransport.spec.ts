@@ -21,7 +21,7 @@ describe("MidiTransport", () => {
 
   const { getCurrentServer, serverOnSpy, serverCleanUp } = setupServer();
 
-  it("Connects and runs through okay check and clocks", async () => {
+  it("connects and runs through okay check and clocks", async () => {
     const client = getCurrentClient();
     const server = getCurrentServer();
 
@@ -132,7 +132,7 @@ describe("MidiTransport", () => {
     });
   });
 
-  it("It Decodes BY", async () => {
+  it("server decodes BY", async () => {
     const client = getCurrentClient();
     const server = getCurrentServer();
 
@@ -140,6 +140,7 @@ describe("MidiTransport", () => {
     await server.listen();
     await client.connect();
 
+    // Send by to server to check decoding on server.
     const [resControl] = await sendAndWaitFor({
       send: () =>
         client.send({
@@ -205,6 +206,65 @@ describe("MidiTransport", () => {
         size: 23,
       },
     });
+  });
+
+  it(" Client decodes BY and aborts the transport.", async () => {
+    const client = getCurrentClient();
+    const server = getCurrentServer();
+
+    // Start Server & Client. Make sure to remove auto Okay.
+    await server.listen();
+    await client.connect();
+
+    // Send by on message port - should be ignored.
+    const [resMessage2] = await sendAndWaitFor({
+      send: () =>
+        server.respond({
+          msg: {
+            BY: {
+              on: "message",
+              header: "BY",
+              token: client.token,
+            },
+          },
+          to: {
+            remoteAddress: "127.0.0.1",
+            remotePort: 5034,
+          },
+        }),
+      waitFor: () =>
+        client.waitForMessage({
+          command: "BY",
+        }),
+    });
+
+    expect(resMessage2).not.toBeInstanceOf(AbortController);
+    expect(client.cleanUpController.signal.aborted).toBeFalsy();
+
+    // Send by on control port - should trigger abort.
+    const [resMessage3] = await sendAndWaitFor({
+      send: () =>
+        server.respond({
+          msg: {
+            BY: {
+              on: "control",
+              header: "BY",
+              token: client.token,
+            },
+          },
+          to: {
+            remoteAddress: "localhost",
+            remotePort: 5033,
+          },
+        }),
+      waitFor: () =>
+        client.waitForMessage({
+          command: "BY",
+        }),
+    });
+
+    expect(resMessage3).not.toBeInstanceOf(AbortController);
+    expect(client.cleanUpController.signal.aborted).toBeTruthy();
   });
 
   it("Dies on control NO", async () => {

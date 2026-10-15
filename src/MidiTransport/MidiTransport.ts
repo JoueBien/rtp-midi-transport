@@ -38,6 +38,7 @@ import {
 import { connectAddListenersForClockSync } from "./routines/connectAddListenersForClockSync";
 import { MidiData } from "../types/MidiData";
 import { isPartialMatch } from "../utils/isPartialMatch";
+import { connectAndListenersForBy } from "./routines/connectAndListenersForBy";
 
 export class MidiTransport implements MidiTransportLike {
   controlClient: UdpTransport;
@@ -140,6 +141,11 @@ export class MidiTransport implements MidiTransportLike {
         // Ensure we remain connected by continuing to share clock pulses.
         addClockPulse(this);
       })();
+    }
+
+    // Make sure we abort when told to by the server.
+    if (okayCheckRes) {
+      connectAndListenersForBy(this);
     }
 
     return okayCheckRes === "ok" ? this.cleanUpController : okayCheckRes;
