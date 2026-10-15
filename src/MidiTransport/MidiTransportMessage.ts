@@ -76,7 +76,7 @@ export const MidiTransportMessage = {
       ]);
     }
 
-    // Return fallback to exaust types.
+    // Return fallback to exhaust types.
     return new Uint8Array(0);
   },
 
