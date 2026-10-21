@@ -3,10 +3,10 @@ import {
   decodeAndPopUnsignedInit8Bit,
   SBitsArray,
 } from "@joue-bien/audio-transport";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands";
 import { decodeAndPopTerminatedBytes } from "../utils/decoders/decodeAndPopTerminatedBytes";
 import { MidiData } from "../types/MidiData";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
 
 /** Decode data for a two byte command. */
 function popData2Byte(unit8Array: Uint8Array<ArrayBuffer>): {

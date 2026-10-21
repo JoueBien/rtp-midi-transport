@@ -1,7 +1,7 @@
-import { DecodedMidiTransportMessage, OnTransport } from "../types";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
+import { type DecodedMidiTransportMessage, type OnTransport } from "../types";
 import { RemoteInfo } from "dgram";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
-import { MidiData } from "./MidiData";
+import { type MidiData } from "./MidiData";
 
 export type MidiTransportInEvent = {
   msg: Buffer<ArrayBufferLike>;

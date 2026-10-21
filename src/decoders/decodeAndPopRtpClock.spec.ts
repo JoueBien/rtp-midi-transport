@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { encodeRtpClock } from "../encode/encodeRtpClock";
 import { RtpTimestamps } from "../types";
 import { decodeAndPopRtpClock } from "./decodeAndPopRtpClock";

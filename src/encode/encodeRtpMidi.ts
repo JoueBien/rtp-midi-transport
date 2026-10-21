@@ -1,5 +1,5 @@
 import { unsignedIntEncoder } from "@joue-bien/audio-transport";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import { MidiData } from "../types/MidiData";
 import { encodeMidiCommandSectionHeader } from "./encodeMidiCommandSectionHeader";
 import { encodeMidiData } from "./encodeMidiData";

@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { MidiTransport } from "./MidiTransport/MidiTransport";
 import { delay, timestamp } from "@joue-bien/audio-transport";
 import { castUnsignedInt14ToMidiData } from "./utils/cast/castUnsignedInt14ToMidiData";

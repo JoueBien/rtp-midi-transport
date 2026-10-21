@@ -7,8 +7,10 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["vitest/globals", "node"],
-    "skipLibCheck": true
+    "types": ["node"],
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    "noImplicitOverride": true
   },
   "lib": ["es2020"],
   "include": ["src/**/*.ts", "tests/**/*.test.ts"]

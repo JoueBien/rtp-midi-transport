@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { waitForFirst } from "./waitForFirst";
 
 describe("waitForFirst", () => {

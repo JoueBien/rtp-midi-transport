@@ -2,9 +2,10 @@ import {
   decodeAndPopUnsignedInit,
   decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
 import { decodeAndPopMidiDataList } from "./decodeAndPopMidiData";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+
 import { MidiData } from "../types/MidiData";
 
 export type DecodedRrpMidiMessage = {

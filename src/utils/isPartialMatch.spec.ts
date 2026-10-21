@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { isPartialMatch } from "./isPartialMatch";
 
 type TestObject = {

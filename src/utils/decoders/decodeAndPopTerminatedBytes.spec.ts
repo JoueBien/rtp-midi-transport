@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { decodeAndPopTerminatedBytes } from "./decodeAndPopTerminatedBytes";
 
 describe("decodeAndPopTerminatedBytes", () => {

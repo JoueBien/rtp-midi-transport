@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { castUnsignedInt14ToMidiData } from "./castUnsignedInt14ToMidiData";
 import { castMidiDataToUnsignedInt14 } from "./castMidiDataToUnsignedInt14";
 

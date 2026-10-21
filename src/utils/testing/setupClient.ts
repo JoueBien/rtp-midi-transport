@@ -1,3 +1,4 @@
+import { expect, beforeEach, afterEach, vi } from "vitest";
 import { MidiTransport } from "../../MidiTransport/MidiTransport";
 
 /** Set up a client for testing.

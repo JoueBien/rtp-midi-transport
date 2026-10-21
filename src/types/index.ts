@@ -1,8 +1,8 @@
 import { RemoteInfo } from "dgram";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import { DecodedRrpControlMessage } from "../decoders/decodeAndPopRtpControl";
 import { DecodedRrpClockMessage } from "../decoders/decodeAndPopRtpClock";
 import { DecodedRrpMidiMessage } from "../decoders/decodeAndPopRtpMidi";
-import { ExactlyOneKeyValuePair } from "./ExactlyOneKeyValuePair";
 import { MidiData } from "./MidiData";
 
 export type Command = "IN" | "OK" | "NO" | "BY" | "CK" | "FB";

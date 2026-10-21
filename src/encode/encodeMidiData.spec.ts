@@ -1,3 +1,4 @@
+import { expect, describe, it } from "vitest";
 import { stringEncoder } from "@joue-bien/audio-transport";
 import { encodeMidiData } from "./encodeMidiData";
 import { decodeAndPopMidiDataList } from "../decoders/decodeAndPopMidiData";

@@ -1,4 +1,4 @@
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 
 /**
  * Run two Promise and return the first one.

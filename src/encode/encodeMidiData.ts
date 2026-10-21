@@ -1,6 +1,6 @@
 import { SBitsArray, unsignedIntEncoder } from "@joue-bien/audio-transport";
 import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands";
-import { ExactlyOneKeyValuePair } from "../types/ExactlyOneKeyValuePair";
+import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import {
   AnyMidiChannelData2Byte,
   AnyMidiChannelData3Byte,

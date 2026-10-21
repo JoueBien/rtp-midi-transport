@@ -1,11 +1,11 @@
-import { vi } from "vitest";
-import { sendAndWaitFor } from "../utils/testing/sendAndWaitFor";
+import { expect, vi, describe, it } from "vitest";
 import { setupClient } from "../utils/testing/setupClient";
-import { setUpFakeTimers } from "../utils/testing/setUpFakeTimers";
 import { setupServer } from "../utils/testing/setupServer";
+import { sendAndWaitFor } from "@joue-bien/audio-transport/utils";
+import { setupFakeTimers } from "@joue-bien/audio-transport/testing/vitest";
 
 describe("MidiTransport", () => {
-  const { advanceTimersByTimeAsync } = setUpFakeTimers({
+  const { advanceTimersByTimeAsync } = setupFakeTimers({
     fake: [
       "fake",
       "Date",

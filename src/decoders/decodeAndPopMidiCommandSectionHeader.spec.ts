@@ -1,4 +1,4 @@
-import { SBitsArray } from "@joue-bien/audio-transport";
+import { expect, describe, it } from "vitest";
 import { encodeMidiCommandSectionHeader } from "../encode/encodeMidiCommandSectionHeader";
 import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
 
