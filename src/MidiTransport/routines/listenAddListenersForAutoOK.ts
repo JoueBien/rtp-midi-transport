@@ -1,4 +1,4 @@
-import { type MidiTransportLike } from "../MidiTransportLike";
+import { type MidiTransportLike } from "../MidiTransportLike.ts";
 
 /**
  * For testing set up the server to auto reply as OK when it receives a IN message.

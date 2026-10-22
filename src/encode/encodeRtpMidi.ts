@@ -1,8 +1,8 @@
 import { unsignedIntEncoder } from "@joue-bien/audio-transport";
 import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
-import { MidiData } from "../types/MidiData";
-import { encodeMidiCommandSectionHeader } from "./encodeMidiCommandSectionHeader";
-import { encodeMidiData } from "./encodeMidiData";
+import { type MidiData } from "../types/MidiData.ts";
+import { encodeMidiCommandSectionHeader } from "./encodeMidiCommandSectionHeader.ts";
+import { encodeMidiData } from "./encodeMidiData.ts";
 
 export function encodeRtpMidi(params: {
   sequence: number;

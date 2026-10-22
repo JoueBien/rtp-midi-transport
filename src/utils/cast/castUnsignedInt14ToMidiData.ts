@@ -1,4 +1,5 @@
-import { intEncoder, SBitsArray } from "@joue-bien/audio-transport";
+import { intEncoder } from "@joue-bien/audio-transport";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /** Encode an into into two midi data values. Commonly used for fader values. */
 export function castUnsignedInt14ToMidiData(num: number): [number, number] {

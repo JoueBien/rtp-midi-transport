@@ -1,2 +1,2 @@
-export * from "./constrains/midiCommands";
-export * from "./constrains/message";
+export * from "./constrains/midiCommands.ts";
+export * from "./constrains/message.ts";

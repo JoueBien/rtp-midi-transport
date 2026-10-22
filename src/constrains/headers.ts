@@ -1,4 +1,4 @@
-import { SBitsArray } from "@joue-bien/audio-transport";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /**
  * Apples MIDI Packets

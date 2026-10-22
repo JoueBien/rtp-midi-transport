@@ -1,15 +1,14 @@
 import {
   decodeAndPopBytes,
   decodeAndPopChars,
-  SBitsArray,
 } from "@joue-bien/audio-transport";
 import {
   APPLE_MIDI_HEADER,
-  BUFFER_PADDING,
   RTP_HEADER_PADDING,
-} from "./../constrains/headers";
-import { AppleMIDICommand, Command } from "./../types";
-import { checkCommand } from "../utils/checkCommand";
+} from "./../constrains/headers.ts";
+import { type AppleMIDICommand, type Command } from "./../types/index.ts";
+import { checkCommand } from "../utils/checkCommand.ts";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /** Using the first 4 bytes check the packet header for what it contains. */
 export function decodeAndPopRtpHeader(buffer: Uint8Array<ArrayBuffer>): {

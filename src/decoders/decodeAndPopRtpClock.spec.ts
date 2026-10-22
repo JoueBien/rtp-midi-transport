@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
-import { encodeRtpClock } from "../encode/encodeRtpClock";
-import { RtpTimestamps } from "../types";
-import { decodeAndPopRtpClock } from "./decodeAndPopRtpClock";
+import { encodeRtpClock } from "../encode/encodeRtpClock.ts";
+import { type RtpTimestamps } from "../types/index.ts";
+import { decodeAndPopRtpClock } from "./decodeAndPopRtpClock.ts";
 import { timestamp } from "@joue-bien/audio-transport";
 
 describe("decodeAndPopRtpClock", () => {

@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { encodeMidiCommandSectionHeader } from "../encode/encodeMidiCommandSectionHeader";
-import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
+import { encodeMidiCommandSectionHeader } from "../encode/encodeMidiCommandSectionHeader.ts";
+import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader.ts";
 
 describe("decodeAndPopMidiCommandSectionHeader", () => {
   it("encodes and decodes a long header", () => {

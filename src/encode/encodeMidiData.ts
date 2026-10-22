@@ -1,14 +1,15 @@
-import { SBitsArray, unsignedIntEncoder } from "@joue-bien/audio-transport";
-import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands";
+import { unsignedIntEncoder } from "@joue-bien/audio-transport";
+import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands.ts";
 import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
 import {
-  AnyMidiChannelData2Byte,
-  AnyMidiChannelData3Byte,
-  AnyMidiCommandData2Byte,
-  AnyMidiCommandData3Byte,
-  MidiCommandDataSysEx,
-  MidiData,
-} from "../types/MidiData";
+  type AnyMidiChannelData2Byte,
+  type AnyMidiChannelData3Byte,
+  type AnyMidiCommandData2Byte,
+  type AnyMidiCommandData3Byte,
+  type MidiCommandDataSysEx,
+  type MidiData,
+} from "../types/MidiData.ts";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 export function encodeMidiAnyChannel3Byte(input: AnyMidiChannelData3Byte) {
   const command = SBitsArray.fromSBits([

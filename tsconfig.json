@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
     "module": "NodeNext",
-    "esModuleInterop": true,
-    "target": "es2020",
-    "moduleResolution": "nodenext",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "noEmit": true,
     "types": ["node"],
     "skipLibCheck": true,
-    "useDefineForClassFields": true,
-    "noImplicitOverride": true
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
-  "lib": ["es2020"],
-  "include": ["src/**/*.ts", "tests/**/*.test.ts"]
+  "include": ["src/**/*.ts", "src/**/*.spec.ts"]
 }

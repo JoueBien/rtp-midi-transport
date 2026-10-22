@@ -1,5 +1,5 @@
 import { timestamp } from "@joue-bien/audio-transport";
-import { type MidiTransportLike } from "./../MidiTransportLike";
+import { type MidiTransportLike } from "./../MidiTransportLike.ts";
 
 /** Add a recurring clock event sender to keep the connection alive.
  * The clock event must be sent at least once every 60 seconds.

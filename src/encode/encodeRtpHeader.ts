@@ -1,6 +1,6 @@
 import { stringEncoder } from "@joue-bien/audio-transport";
-import { APPLE_MIDI_HEADER, BUFFER_PADDING } from "../constrains/headers";
-import { AppleMIDICommand, Command } from "../types";
+import { APPLE_MIDI_HEADER, BUFFER_PADDING } from "../constrains/headers.ts";
+import { type AppleMIDICommand, type Command } from "../types/index.ts";
 
 /** Encode RTP or Apple Midi header based on the command. */
 export function encodeRtpHeader(params: {

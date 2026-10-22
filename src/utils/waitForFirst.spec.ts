@@ -1,5 +1,5 @@
 import { expect, describe, it, vi } from "vitest";
-import { waitForFirst } from "./waitForFirst";
+import { waitForFirst } from "./waitForFirst.ts";
 
 describe("waitForFirst", () => {
   it("waits for first item but only resolves once", async () => {

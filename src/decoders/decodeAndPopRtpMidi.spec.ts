@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { decodeAndPopRtpMidi } from "./decodeAndPopRtpMidi";
+import { decodeAndPopRtpMidi } from "./decodeAndPopRtpMidi.ts";
 
 describe("decodeAndPopRtpMidi", () => {
   it("decodes and encodes header", () => {

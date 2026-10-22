@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, vi } from "vitest";
-import { MidiTransport } from "../../MidiTransport/MidiTransport";
-import { listenAddListenersForAutoOK } from "../../MidiTransport/routines/listenAddListenersForAutoOK";
+import { MidiTransport } from "../../MidiTransport/MidiTransport.ts";
+import { listenAddListenersForAutoOK } from "../../MidiTransport/routines/listenAddListenersForAutoOK.ts";
 
 /** Set up a server for a test with everything we need to test a client.
  * Will automatically accept any client.

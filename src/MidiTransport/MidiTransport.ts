@@ -1,17 +1,13 @@
+import { UdpTransport, timestamp } from "@joue-bien/audio-transport";
+import { counterFactory } from "@joue-bien/audio-transport/utils/counter-factory";
+import { EventEmitterController } from "@joue-bien/audio-transport/utils/subscriber-list";
+import { Failure, type Result } from "fail-up";
 import {
-  EventEmitterController,
-  UdpTransport,
-  counterFactory,
-  delay,
-  timestamp,
-} from "@joue-bien/audio-transport";
-import { Failure, Result } from "fail-up";
-import {
-  DecodedMidiTransportMessage,
-  MidiTransportMessageRespondParams,
-  MidiTransportMessageSendParams,
-} from "./../types";
-import { MidiTransportMessage } from "./MidiTransportMessage";
+  type DecodedMidiTransportMessage,
+  type MidiTransportMessageRespondParams,
+  type MidiTransportMessageSendParams,
+} from "./../types/index.ts";
+import { MidiTransportMessage } from "./MidiTransportMessage.ts";
 import {
   EMIT_ERROR,
   EMIT_MESSAGE_ALL,
@@ -22,23 +18,24 @@ import {
   EMIT_MESSAGE_MIDI,
   EMIT_MESSAGE_NO,
   EMIT_MESSAGE_OK,
-} from "./../constrains/message";
-import { castMidiTransportMessageSendParamsTo } from "./../utils/cast/castMidiTransportMessageSendParamsTo";
-import { type MidiTransportLike } from "./MidiTransportLike";
-import { addClockPulse } from "./routines/addClockPulse";
-import { addBaseHandlers } from "./routines/addBaseHandlers";
-import { listenAddListenersForClockSync } from "./routines/listenAddListenersForClockSync";
-import { connectOkCheck } from "./routines/connectOkCheck";
-import { castMidiTransportMessageRespondParamsTo } from "../utils/cast/castMidiTransportMessageRespondParamsTo";
+} from "./../constrains/message.ts";
+import { castMidiTransportMessageSendParamsTo } from "./../utils/cast/castMidiTransportMessageSendParamsTo.ts";
+import { type MidiTransportLike } from "./MidiTransportLike.ts";
+import { addClockPulse } from "./routines/addClockPulse.ts";
+import { addBaseHandlers } from "./routines/addBaseHandlers.ts";
+import { listenAddListenersForClockSync } from "./routines/listenAddListenersForClockSync.ts";
+import { connectOkCheck } from "./routines/connectOkCheck.ts";
+import { castMidiTransportMessageRespondParamsTo } from "../utils/cast/castMidiTransportMessageRespondParamsTo.ts";
 import {
-  MidiTransportAnyEvent,
-  MidiTransportSpecificEvent,
-  MidiTransportSpecificMidiEvent,
-} from "../types/events";
-import { connectAddListenersForClockSync } from "./routines/connectAddListenersForClockSync";
-import { MidiData } from "../types/MidiData";
-import { isPartialMatch } from "../utils/isPartialMatch";
-import { connectAndListenersForBy } from "./routines/connectAndListenersForBy";
+  type MidiTransportAnyEvent,
+  type MidiTransportSpecificEvent,
+  type MidiTransportSpecificMidiEvent,
+} from "../types/events.ts";
+import { connectAddListenersForClockSync } from "./routines/connectAddListenersForClockSync.ts";
+import { type MidiData } from "../types/MidiData.ts";
+import { isPartialMatch } from "../utils/isPartialMatch.ts";
+import { connectAndListenersForBy } from "./routines/connectAndListenersForBy.ts";
+import { delay } from "@joue-bien/audio-transport/utils/async";
 
 export class MidiTransport implements MidiTransportLike {
   controlClient: UdpTransport;

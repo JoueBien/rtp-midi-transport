@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { unsignedIntEncoder, timestamp } from "@joue-bien/audio-transport";
-import { MidiTransportMessage } from "./MidiTransportMessage";
-import { encodeRtpHeader } from "./../encode/encodeRtpHeader";
+import { MidiTransportMessage } from "./MidiTransportMessage.ts";
+import { encodeRtpHeader } from "./../encode/encodeRtpHeader.ts";
 
 describe("MidiTransportMessage", () => {
   it("encodes and decodes commands", () => {

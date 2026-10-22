@@ -1,5 +1,5 @@
 import { timestamp } from "@joue-bien/audio-transport";
-import { type MidiTransportLike } from "../MidiTransportLike";
+import { type MidiTransportLike } from "../MidiTransportLike.ts";
 
 /** Add listeners for clock sync. (Client Only). */
 export function connectAddListenersForClockSync(transport: MidiTransportLike) {

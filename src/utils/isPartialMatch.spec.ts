@@ -1,5 +1,5 @@
 import { expect, describe, it } from "vitest";
-import { isPartialMatch } from "./isPartialMatch";
+import { isPartialMatch } from "./isPartialMatch.ts";
 
 type TestObject = {
   keyOne: string;

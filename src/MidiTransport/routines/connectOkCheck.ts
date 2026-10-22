@@ -1,6 +1,6 @@
 import { Failure } from "fail-up";
-import { type MidiTransportLike } from "./../MidiTransportLike";
-import { waitForFirst } from "../../utils/waitForFirst";
+import { type MidiTransportLike } from "./../MidiTransportLike.ts";
+import { waitForFirst } from "../../utils/waitForFirst.ts";
 
 const EXIT_TIME_MS = 500;
 

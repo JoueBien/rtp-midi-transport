@@ -1,7 +1,7 @@
 // Lib Main
-export { MidiTransport } from "./MidiTransport/MidiTransport";
-export { MidiTransportMessage } from ".//MidiTransport/MidiTransportMessage";
+export { MidiTransport } from "./MidiTransport/MidiTransport.ts";
+export { MidiTransportMessage } from ".//MidiTransport/MidiTransportMessage.ts";
 
-export * from "./types/MidiData";
-export * from "./types/events";
-export * from "./types/index";
+export * from "./types/MidiData.ts";
+export * from "./types/events.ts";
+export * from "./types/index.ts";

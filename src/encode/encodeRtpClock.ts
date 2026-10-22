@@ -1,6 +1,6 @@
 import { unsignedIntEncoder } from "@joue-bien/audio-transport";
-import { BUFFER_PADDING } from "../constrains/headers";
-import { RtpTimestamps } from "../types";
+import { BUFFER_PADDING } from "../constrains/headers.ts";
+import { type RtpTimestamps } from "../types/index.ts";
 
 export function encodeRtpClock(params: {
   ssrc: number;

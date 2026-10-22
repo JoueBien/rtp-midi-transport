@@ -1,8 +1,8 @@
 import { expect, vi, describe, it } from "vitest";
-import { setupClient } from "../utils/testing/setupClient";
-import { setupServer } from "../utils/testing/setupServer";
-import { sendAndWaitFor } from "@joue-bien/audio-transport/utils";
+import { setupClient } from "../utils/testing/setupClient.ts";
+import { setupServer } from "../utils/testing/setupServer.ts";
 import { setupFakeTimers } from "@joue-bien/audio-transport/testing/vitest";
+import { sendAndWaitFor } from "@joue-bien/audio-transport/utils/async";
 
 describe("MidiTransport", () => {
   const { advanceTimersByTimeAsync } = setupFakeTimers({

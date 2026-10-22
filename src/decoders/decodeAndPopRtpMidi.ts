@@ -3,10 +3,10 @@ import {
   decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
 import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
-import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader";
-import { decodeAndPopMidiDataList } from "./decodeAndPopMidiData";
+import { decodeAndPopMidiCommandSectionHeader } from "./decodeAndPopMidiCommandSectionHeader.ts";
+import { decodeAndPopMidiDataList } from "./decodeAndPopMidiData.ts";
 
-import { MidiData } from "../types/MidiData";
+import { type MidiData } from "../types/MidiData.ts";
 
 export type DecodedRrpMidiMessage = {
   /** 16 Bit sequence number of Midi Message. */

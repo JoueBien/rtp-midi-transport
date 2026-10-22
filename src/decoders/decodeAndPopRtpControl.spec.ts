@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { encodeRtpControl } from "../encode/encodeRtpControl";
-import { decodeAndPopRtpControl } from "./decodeAndPopRtpControl";
+import { encodeRtpControl } from "../encode/encodeRtpControl.ts";
+import { decodeAndPopRtpControl } from "./decodeAndPopRtpControl.ts";
 
 describe("decodeAndPopRtpControl", () => {
   it("decodes an encodes value", () => {

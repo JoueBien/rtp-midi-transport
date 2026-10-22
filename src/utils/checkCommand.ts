@@ -1,4 +1,4 @@
-import { Command } from "../types";
+import { type Command } from "../types/index.ts";
 
 /** Check if a string matches an RTP MIDI Command. */
 export function checkCommand(str: string | Command): Command {

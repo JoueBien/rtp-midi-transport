@@ -4,7 +4,7 @@ import {
   decodeAndPopUnsignedInit8Bit,
   decodeAndPopUnsignedInt64Bit,
 } from "@joue-bien/audio-transport";
-import { RtpTimestamps } from "../types";
+import { type RtpTimestamps } from "../types/index.ts";
 
 export type DecodedRrpClockMessage = {
   /** Count is zero indexed.

@@ -1,4 +1,4 @@
-import { MidiLabel } from "../types/MidiData";
+import { type MidiLabel } from "../types/MidiData.ts";
 
 export const NoteOff = 8;
 export const NoteOn: 9 = 9;

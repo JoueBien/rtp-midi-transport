@@ -1,7 +1,7 @@
-import { RemoteInfo } from "dgram";
-import { type MidiTransportLike } from "./../MidiTransportLike";
-import { MidiTransportUnknownEvent } from "../../types";
-import { MidiTransportMessage } from "./../MidiTransportMessage";
+import { type RemoteInfo } from "dgram";
+import { type MidiTransportLike } from "./../MidiTransportLike.ts";
+import { type MidiTransportUnknownEvent } from "../../types/index.ts";
+import { MidiTransportMessage } from "./../MidiTransportMessage.ts";
 import {
   EMIT_ERROR,
   EMIT_MESSAGE_ALL,
@@ -12,10 +12,10 @@ import {
   EMIT_MESSAGE_MIDI,
   EMIT_MESSAGE_NO,
   EMIT_MESSAGE_OK,
-} from "../../constrains/message";
+} from "../../constrains/message.ts";
 import { Failure } from "fail-up";
-import { MidiData } from "../../types/MidiData";
-import { commandToLabelOrUndefined } from "../../utils/cast/commandToLabel";
+import { type MidiData } from "../../types/MidiData.ts";
+import { commandToLabelOrUndefined } from "../../utils/cast/commandToLabel.ts";
 
 /** Add handlers to listen for events on both ports.
  * These listeners are suitable for both client and server. */

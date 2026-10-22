@@ -1,9 +1,9 @@
-import { RemoteInfo } from "dgram";
+import { type RemoteInfo } from "dgram";
 import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
-import { DecodedRrpControlMessage } from "../decoders/decodeAndPopRtpControl";
-import { DecodedRrpClockMessage } from "../decoders/decodeAndPopRtpClock";
-import { DecodedRrpMidiMessage } from "../decoders/decodeAndPopRtpMidi";
-import { MidiData } from "./MidiData";
+import { type DecodedRrpControlMessage } from "../decoders/decodeAndPopRtpControl.ts";
+import { type DecodedRrpClockMessage } from "../decoders/decodeAndPopRtpClock.ts";
+import { type DecodedRrpMidiMessage } from "../decoders/decodeAndPopRtpMidi.ts";
+import { type MidiData } from "./MidiData.ts";
 
 export type Command = "IN" | "OK" | "NO" | "BY" | "CK" | "FB";
 

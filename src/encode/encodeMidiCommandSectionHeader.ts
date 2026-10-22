@@ -1,4 +1,5 @@
-import { unsignedIntEncoder, SBitsArray } from "@joue-bien/audio-transport";
+import { unsignedIntEncoder } from "@joue-bien/audio-transport";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /**
  * Creates a midi list header.

@@ -1,20 +1,16 @@
+import { UdpTransport } from "@joue-bien/audio-transport";
+import { Failure, type Result } from "fail-up";
+import type { EventEmitterController } from "@joue-bien/audio-transport/utils/subscriber-list";
+import type { counterFactory } from "@joue-bien/audio-transport/utils/counter-factory";
 import {
-  counterFactory,
-  EventEmitterController,
-  UdpTransport,
-} from "@joue-bien/audio-transport";
-import { Failure, Result } from "fail-up";
+  type DecodedMidiTransportMessage,
+  type MidiTransportMessageSendParams,
+  type MidiTransportMessageRespondParams,
+} from "../types/index.ts";
 import {
-  DecodedMidiTransportMessage,
-  MidiTransportMessageSendParams,
-  MidiTransportMessageRespondParams,
-  MidiTransportUnknownEvent,
-} from "../types";
-import {} from "../constrains/message";
-import {
-  MidiTransportAnyEvent,
-  MidiTransportSpecificEvent,
-} from "../types/events";
+  type MidiTransportAnyEvent,
+  type MidiTransportSpecificEvent,
+} from "../types/events.ts";
 
 export interface MidiTransportLike {
   controlClient: UdpTransport;

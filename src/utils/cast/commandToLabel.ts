@@ -1,8 +1,8 @@
 import {
   LABEL_TO_MIDI_LOOK_UP,
   MIDI_TO_LABEL_LOOK_UP,
-} from "../../index.constrains";
-import { MidiLabel } from "../../types/MidiData";
+} from "../../index.constrains.ts";
+import { type MidiLabel } from "../../types/MidiData.ts";
 
 /** Look up MIDI command and get string back. */
 export function commandToLabel(command: number): MidiLabel {

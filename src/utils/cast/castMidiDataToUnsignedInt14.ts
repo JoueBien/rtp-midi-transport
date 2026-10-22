@@ -1,7 +1,5 @@
-import {
-  decodeAndPopUnsignedInit16Bit,
-  SBitsArray,
-} from "@joue-bien/audio-transport";
+import { decodeAndPopUnsignedInit16Bit } from "@joue-bien/audio-transport";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /** Decode two midi data points into a single int. Commonly used for fader values. */
 export function castMidiDataToUnsignedInt14(input: [number, number]) {

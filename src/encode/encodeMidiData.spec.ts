@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { stringEncoder } from "@joue-bien/audio-transport";
-import { encodeMidiData } from "./encodeMidiData";
-import { decodeAndPopMidiDataList } from "../decoders/decodeAndPopMidiData";
+import { encodeMidiData } from "./encodeMidiData.ts";
+import { decodeAndPopMidiDataList } from "../decoders/decodeAndPopMidiData.ts";
 
 describe("encodeMidiData", () => {
   it("encodeMidiAnyChannel3Byte", () => {

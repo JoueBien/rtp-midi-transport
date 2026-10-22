@@ -1,4 +1,4 @@
-import { MidiTransportMessageSendParams } from "../../types";
+import { type MidiTransportMessageSendParams } from "../../types/index.ts";
 
 export function castMidiTransportMessageSendParamsTo<
   E extends keyof MidiTransportMessageSendParams,

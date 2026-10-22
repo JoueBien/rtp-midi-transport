@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
-import { castUnsignedInt14ToMidiData } from "./castUnsignedInt14ToMidiData";
-import { castMidiDataToUnsignedInt14 } from "./castMidiDataToUnsignedInt14";
+import { castUnsignedInt14ToMidiData } from "./castUnsignedInt14ToMidiData.ts";
+import { castMidiDataToUnsignedInt14 } from "./castMidiDataToUnsignedInt14.ts";
 
 describe("castInt14ToMidiData", () => {
   it("encodes and decodes 14 bit numbers", () => {

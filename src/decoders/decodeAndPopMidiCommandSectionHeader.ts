@@ -1,9 +1,9 @@
 import {
   decodeAndPopBytes,
   decodeAndPopUnsignedInit8Bit,
-  SBitsArray,
   decodeAndPopUnsignedInit16Bit,
 } from "@joue-bien/audio-transport";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /**
  * Creates a midi list header.

@@ -1,7 +1,8 @@
 import { expect, describe, it } from "vitest";
-import { MidiTransport } from "./MidiTransport/MidiTransport";
-import { delay, timestamp } from "@joue-bien/audio-transport";
-import { castUnsignedInt14ToMidiData } from "./utils/cast/castUnsignedInt14ToMidiData";
+import { MidiTransport } from "./MidiTransport/MidiTransport.ts";
+import { timestamp } from "@joue-bien/audio-transport";
+import { castUnsignedInt14ToMidiData } from "./utils/cast/castUnsignedInt14ToMidiData.ts";
+import { delay } from "@joue-bien/audio-transport/utils/async";
 
 describe.skip("MidiTransport", () => {
   it(

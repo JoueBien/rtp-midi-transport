@@ -1,12 +1,12 @@
 import {
   decodeAndPopBytes,
   decodeAndPopUnsignedInit8Bit,
-  SBitsArray,
 } from "@joue-bien/audio-transport";
 import { type ExactlyOneKeyValuePair } from "@joue-bien/audio-transport/types";
-import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands";
-import { decodeAndPopTerminatedBytes } from "../utils/decoders/decodeAndPopTerminatedBytes";
-import { MidiData } from "../types/MidiData";
+import { LABEL_TO_MIDI_LOOK_UP } from "../constrains/midiCommands.ts";
+import { decodeAndPopTerminatedBytes } from "../utils/decoders/decodeAndPopTerminatedBytes.ts";
+import { type MidiData } from "../types/MidiData.ts";
+import { SBitsArray } from "@joue-bien/audio-transport/utils/sbit-array";
 
 /** Decode data for a two byte command. */
 function popData2Byte(unit8Array: Uint8Array<ArrayBuffer>): {

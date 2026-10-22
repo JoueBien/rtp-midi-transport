@@ -1,5 +1,5 @@
 import { expect, beforeEach, afterEach, vi } from "vitest";
-import { MidiTransport } from "../../MidiTransport/MidiTransport";
+import { MidiTransport } from "../../MidiTransport/MidiTransport.ts";
 
 /** Set up a client for testing.
  * Cleans up on at end of each test cases. */
